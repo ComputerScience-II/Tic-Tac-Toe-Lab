@@ -5,57 +5,67 @@ using namespace std;
 
 int main() {
 
-char selections[] = {'1',2,'3','4','5','6','7','8','9'};
+    char selections[] = {'1',2,'3','4','5','6','7','8','9'};
 
-char turn = 'X';
+    char turn = 'X';
 
-int choice;
+    int choice;
 
-bool end = false;
+    bool end = false;
 
 
-while(!end) {
+    while(!end) {
 
-    for( int i = 0; i < 9; i++) {
+        for( int i = 0; i < 9; i++) {
 
-        cout << selections[i];
+            cout << selections[i];
 
-       if (i % 3 != 2){
+        if (i % 3 != 2){
 
-        cout << " | ";
+            cout << " | ";
 
-       }
-    else if (i != 8) {
-    
-          cout << "\n---------\n";
-    
+        }
+        else if (i != 8) {
+        
+            cout << "\n---------\n";
+        
+        }
+        else {
+
+            cout << "\n";
+
+        }
+
     }
-    else {
 
-        cout << "\n";
+    cout << "Player " << turn << " , enter a digit: ";
+
+    cin >> choice;
+
+
+    if (choice < 1 || choice > 9) {
+
+        cout << "Please chooose a digit that falls inside the tic tac toe grid.";
+    }
+
+    if (selections[choice - 1] == 'X' || selections[choice - 1] == 'O') {
+
+        cout << "This slot has already been filled please choose another digit.";
 
     }
 
-}
-
-cout << "Player " << turn << " , enter a digit: ";
-
-cin >> choice;
+    selections[choice - 1] = turn;
 
 
-if (choice < 1 || choice > 9) {
-    cout << "Please chooose a digit that falls inside the tic tac toe grid.\n";
-}
+        return 0;
+    }
 
-if (selections[choice - 1] == 'X' || selections[choice - 1] == 'O') {
+    int combinations [8][3] = { {0,1,2}, {3,4,5}, {6,7,8}, {0,3,6}, {1,4,7}, {2,5,8}, {0,4,8}, {2,4,6} };
 
-    cout << "This slot has already been filled please choose another digit.\n";
+    bool ifWin = false;
 
-}
-
-selections[choice - 1] = turn;
+    
 
 
-    return 0;
 }
 
