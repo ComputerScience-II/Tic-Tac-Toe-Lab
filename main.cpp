@@ -1,10 +1,11 @@
 #include <iostream>
+#include <cassert>
 #include <fstream>
 using namespace std;
 
 char selections[] = {'1','2','3','4','5','6','7','8','9'};
 char turn = 'X';
-int choice;
+char choice;
 bool gameEnd = false;
 int scoreX = 0;
 int scoreO = 0;
@@ -41,7 +42,125 @@ void resetGame() {
 
 }
 
+void testCases() {
+
+    selections[0]='X'; 
+    selections[1]='X'; 
+    selections[2]='X';
+    selections[3]='O'; 
+    selections[4]='O'; 
+    selections[5]='5';
+    selections[6]='6'; 
+    selections[7]='7'; 
+    selections[8]='8';
+
+    turn = 'X';
+
+    assert(checkWin() == true);
+
+    selections[0]='1'; 
+    selections[1]='2'; 
+    selections[2]='3';
+
+    selections[3]='X'; 
+    selections[4]='X'; 
+    selections[5]='X';
+    selections[6]='O'; 
+    selections[7]='O'; 
+    selections[8]='9';
+
+    turn = 'X';
+    assert(checkWin() == true);
+
+    selections[0]='O'; 
+    selections[1]='2'; 
+    selections[2]='3';
+    selections[3]='O';
+    selections[4]='5'; 
+    selections[5]='6';
+    selections[6]='O'; 
+    selections[7]='8'; 
+    selections[8]='9';
+
+    turn = 'O';
+    assert(checkWin() == true);
+
+    selections[0]='X'; 
+    selections[1]='2'; 
+    selections[2]='3';
+    selections[3]='4'; 
+    selections[4]='X'; 
+    selections[5]='6';
+    selections[6]='7'; 
+    selections[7]='8'; 
+    selections[8]='X';
+
+    turn = 'X';
+    assert(checkWin() == true);
+
+    selections[0]='1'; 
+    selections[1]='2'; 
+    selections[2]='O';
+    selections[3]='4'; 
+    selections[4]='O'; 
+    selections[5]='6';
+    selections[6]='O'; 
+    selections[7]='8'; 
+    selections[8]='9';
+
+    turn = 'O';
+    assert(checkWin() == true);
+
+    selections[0]='X'; 
+    selections[1]='O'; 
+    selections[2]='X';
+    selections[3]='O'; 
+    selections[4]='X'; 
+    selections[5]='O';
+    selections[6]='O'; 
+    selections[7]='X';
+    selections[8]='9';
+
+    turn = 'X';
+    assert(checkWin() == false);
+    assert(checkTie() == false);
+
+    selections[0]='X'; 
+    selections[1]='O'; 
+    selections[2]='X';
+    selections[3]='O'; 
+    selections[4]='X'; 
+    selections[5]='O';
+    selections[6]='O';
+    selections[7]='X'; 
+    selections[8]='O';
+
+    turn = 'X';
+    assert(checkWin() == false);
+    assert(checkTie() == true);
+
+    selections[0]='1'; 
+    selections[1]='2'; 
+    selections[2]='3';
+    selections[3]='4'; 
+    selections[4]='X';
+    selections[5]='6';
+    selections[6]='7'; 
+    selections[7]='8';
+    selections[8]='9';
+
+    turn = 'X';
+    assert(checkWin() == false);
+    assert(checkTie() == false);
+
+
+}
+
 int main() {
+
+    testCases();
+
+    resetGame();
 
     string playerX, playerO;
 
@@ -82,56 +201,60 @@ int main() {
             cout << "Player " << turn << ", enter a digit: ";
             cin >> choice;
 
-            if (cin.fail() || choice < 1 || choice > 9) {
-
-                cin.clear();
-                cin.ignore(500, '\n');
-                cout << "Invalid, enter a digit between 1-9.\n";
-                continue;
-            }
-
-            char sizeChecker;
-
-            cin >> sizeChecker;
-
-            if (cin.peek() != '\n' || sizeChecker < '1' || sizeChecker > '9') {
+            if (cin.fail() || choice < '1' || choice > '9') {
 
                 cin.clear();
                 cin.ignore(50000, '\n');
-
-                cout << "Enter a single digit only please.\n";
+                cout << "Invalid input! Enter a single digit between 1-9.\n";
                 continue;
-
             }
 
-            choice = sizeChecker - '0';
+            int a = choice - '0' - 1;
 
-            if (selections[choice - 1] == 'X' || selections[choice - 1] == 'O') {
+            if (selections[a] == 'X' || selections[a] == 'O') {
 
                 cout << "This slot is already full!!.\n";
+
                 continue;
             }
 
             
 
-            selections[choice - 1] = turn;
+            selections[a] = turn;
 
-            if (checkWin()) {
-
-                cout << "Player " << (turn == 'X' ? playerX : playerO) << " wins!\n";
-                gameEnd = true;
-                if (turn == 'X') scoreX++;
-                else scoreO++;
-            } 
-            else if (checkTie()) {
-
-                cout << "Game has ended in a tie.\n";
-                gameEnd = true;
-                scoreTie++;
-            } 
+           if (checkWin()) {
+                if (turn == 'X') {
+                    cout << "Player " << playerX << " wins!\n";
+                    scoreX++;
+                }       
+                
             else {
+                cout << "Player " << playerO << " wins!\n";
+                scoreO++;
+            }
 
-                turn = (turn == 'X') ? 'O' : 'X';
+            gameEnd = true;
+
+            } 
+
+            else {
+                if (checkTie()) {
+
+                    cout << "Game has ended in a tie.\n";
+                    scoreTie++;
+                    gameEnd = true;
+
+                } 
+                else {
+
+                    if (turn == 'X') {
+                        
+                        turn = 'O';
+                    } 
+                    else {
+                        turn = 'X';
+                    }
+                }
             }
         }
 
@@ -147,7 +270,7 @@ int main() {
 
         ofstream dFile("draws.txt"); dFile << scoreTie; dFile.close();
 
-       cout << "Do you want to play another game? (y/n): ";
+        cout << "Do you want to play another game? (y/n): ";
 
         cin >> continueGame;
 
