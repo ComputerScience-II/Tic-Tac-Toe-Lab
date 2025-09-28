@@ -90,11 +90,29 @@ int main() {
                 continue;
             }
 
+            char sizeChecker;
+
+            cin >> sizeChecker;
+
+            if (cin.peek() != '\n' || sizeChecker < '1' || sizeChecker > '9') {
+
+                cin.clear();
+                cin.ignore(50000, '\n');
+
+                cout << "Enter a single digit only please.\n";
+                continue;
+
+            }
+
+            choice = sizeChecker - '0';
+
             if (selections[choice - 1] == 'X' || selections[choice - 1] == 'O') {
 
                 cout << "This slot is already full!!.\n";
                 continue;
             }
+
+            
 
             selections[choice - 1] = turn;
 
