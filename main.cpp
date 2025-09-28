@@ -153,6 +153,21 @@ void testCases() {
     assert(checkWin() == false);
     assert(checkTie() == false);
 
+    selections[0]='X a 3';
+    selections[1]='O'; 
+    selections[2]='X';
+    selections[3]='4'; 
+    selections[4]='X';
+    selections[5]='6';
+    selections[6]='7'; 
+    selections[7]='8';
+    selections[8]='9';
+
+    turn = 'X';
+    assert(checkWin() == false);
+    assert(checkTie() == false);
+    
+
 
 }
 
