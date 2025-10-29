@@ -301,6 +301,21 @@ void normalGame() {
 
 }
 
+bool isAdjacent(int slot1, int slot2) {
+
+    if (slot1 < 0 || slot1 > 8 || slot2 < 0 || slot2 > 8) {
+
+        return false;
+    }
+
+    if (slot1 == slot2 - 1 || slot1 == slot2 + 1 || slot1 == slot2 - 3 || slot1 == slot2 + 3) {
+
+        return true;
+    }
+
+    return false;
+}
+
 void battleMode() {
 
     resetGame();
@@ -386,7 +401,117 @@ void battleMode() {
             currentArchetype = archetype2;
         }
 
+        cout << "Player " << currentChar << " (" << turn << "), choose a move: ";
 
+        cout << "1. Regular Move\n";
+        cout << "2. Special Move\n";
+        
+        int moveChoice;
+
+        cin >> moveChoice;
+
+        if(moveChoice = 1) {
+            
+            cout << "Enter a slot number 1-9: ";
+            cin >> choice;
+
+            if (cin.fail() || choice < '1' || choice > '9') {
+                    cin.clear(); cin.ignore(50000, '\n');
+                    cout << "Invalid input!\n";
+                    continue;
+            }
+
+            int a = choice - '0' - 1;
+
+            if (selections[a] == char1 || selections[a] == char2) {
+
+                cout << "This slot is already full!!.\n";
+
+                continue;
+
+            }
+
+            selections[a] = turn;
+
+        }
+
+        else if (moveChoice = 2) {
+
+            if((currentArchetype == "Alchemist") || (currentArchetype == "alchemist")) {
+
+                int boardCounter = 0;
+
+                for(int i = 0; i < 9; i++) {
+
+                    if(selections[i] == char1 || selections[i] == char2) {
+
+                        boardCounter++;
+                    }
+                }
+
+                if(boardCounter < 2) {
+
+                    cout << "Not enough pieces on board to perform special move.\n";
+                    
+                }
+
+                cout << "Enter the slot numbers of the pieces you want to swap: ";
+
+                int slot1, slot2;
+
+                cin >> slot1 >> slot2;
+
+                slot1 - 1;
+                slot2 - 1;
+
+                if(slot1 < 0 || slot1 > 8 || slot2 < 0 || slot2 > 8) {
+
+                    cout << "Invalid slot numbers!\n";
+
+                }
+                if(slot1 == slot2) {
+
+                    cout << "Cannot swap the same slot!\n";
+
+                }
+
+                char aTemp = selections[slot1];
+
+                selections[slot1] = selections[slot2];
+
+                selections[slot2] = aTemp;
+
+            }
+
+            else if((currentArchetype == "Paladin") || (currentArchetype == "paladin")) {
+
+               int boardCounter = 0;
+
+                for(int i = 0; i < 9; i++) {
+
+                    if(selections[i] == char1 || selections[i] == char2) {
+
+                        boardCounter++;
+                    }
+                }
+
+                if (boardCounter < 1) {
+
+                    cout << "Not enough pieces on board to perform special move.\n";
+                    
+                }
+
+               
+            }
+
+            
+        }
+
+    
+
+    
+
+    
     }
 }
 
