@@ -1,15 +1,11 @@
 #include <iostream>
 #include <cassert>
-#include <fstream>
 using namespace std;
 
 char selections[] = {'1','2','3','4','5','6','7','8','9'};
 char turn = 'X';
 char choice;
 bool gameEnd = false;
-int scoreX = 0;
-int scoreO = 0;
-int scoreTie = 0;
 
 bool checkWin() {
 
@@ -153,7 +149,7 @@ void testCases() {
     assert(checkWin() == false);
     assert(checkTie() == false);
 
-    selections[0]='X a 3';
+    selections[0]='X';
     selections[1]='O'; 
     selections[2]='X';
     selections[3]='4'; 
@@ -171,31 +167,45 @@ void testCases() {
 
 }
 
-int main() {
+bool characterChecker(char a) { 
 
-    testCases();
+    if ((a >= 'A' && a <= 'Z') || (a >= 'a' && a <= 'z') || (a == '?' ) || (a == '!') || (a == '*') || (a == '~') || (a == '#') || (a == '$') || (a == '%')) {
+
+        return true;
+    }
+
+    return false;
+}
+
+void displayBoard() {
+
+    for (int i = 0; i < 9; i++) {
+
+        cout << selections[i];
+
+        if (i % 3 != 2) cout << " | ";
+
+        else if (i != 8) cout << "\n---------\n";
+
+        else cout << "\n\n";
+    }
+
+}
+
+void normalGame() {
 
     resetGame();
 
     string playerX, playerO;
 
     cout << "Enter name for Player X: ";
+
     getline(cin, playerX);
 
     cout << "Enter name for Player O: ";
+
     getline(cin, playerO);
 
-    ifstream xfile(playerX + "--scores.txt");
-    if (xfile) xfile >> scoreX;
-    xfile.close();
-
-    ifstream ofile(playerO + "--scores.txt");
-    if (ofile) ofile >> scoreO;
-    ofile.close();
-
-    ifstream dfile("draws.txt");
-    if (dfile) dfile >> scoreTie;
-    dfile.close();
 
     char continueGame = 'y';
 
@@ -214,6 +224,7 @@ int main() {
             }
 
             cout << "Player " << turn << ", enter a digit: ";
+
             cin >> choice;
 
             if (cin.fail() || choice < '1' || choice > '9') {
@@ -240,12 +251,11 @@ int main() {
            if (checkWin()) {
                 if (turn == 'X') {
                     cout << "Player " << playerX << " wins!\n";
-                    scoreX++;
                 }       
                 
             else {
                 cout << "Player " << playerO << " wins!\n";
-                scoreO++;
+
             }
 
             gameEnd = true;
@@ -256,7 +266,6 @@ int main() {
                 if (checkTie()) {
 
                     cout << "Game has ended in a tie.\n";
-                    scoreTie++;
                     gameEnd = true;
 
                 } 
@@ -272,18 +281,6 @@ int main() {
                 }
             }
         }
-
-        cout << "\n--- Stats ---\n";
-
-        cout << playerX << " (X) Wins: " << scoreX << "\n";
-        cout << playerO << " (O) Wins: " << scoreO << "\n";
-        cout << "Draws: " << scoreTie << "\n";
-
-        ofstream xFile(playerX + "-results.txt"); xFile << scoreX; xFile.close();
-
-        ofstream ofile(playerO + "-results.txt"); ofile << scoreO; ofile.close();
-
-        ofstream dFile("draws.txt"); dFile << scoreTie; dFile.close();
 
         cout << "Do you want to play another game? (y/n): ";
 
@@ -301,6 +298,16 @@ int main() {
         }
 
     }
+
+}
+
+int main() {
+
+    testCases();
+
+    resetGame();
+
+   
 
     cout << "Thanks for playing\n";
     return 0;
