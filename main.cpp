@@ -301,6 +301,95 @@ void normalGame() {
 
 }
 
+void battleMode() {
+
+    resetGame();
+
+    string playerX, playerO;
+    char char1, char2;
+    string archetype1, archetype2;
+
+    cout << "Enter name for Player X: ";
+
+    getline(cin, playerX);
+
+    cout << "Enter name for Player O: ";
+
+    getline(cin, playerO);
+
+    cout << "Player " << playerX << ", choose your character symbol: ";
+
+    cin >> char1;
+
+    while (!characterChecker(char1)) {
+
+        cout << "Invalid character! Please choose a valid character symbol: ";
+
+        cin >> char1;
+
+    }
+
+    cout << "Player " << playerO << ", choose your character symbol: ";
+
+    cin >> char2;
+
+    while (!characterChecker(char2)) {
+
+        cout << "Invalid character! Please choose a valid character symbol: ";
+
+        cin >> char2;
+
+    }
+
+    cout << playerX << "choose an archetype between Paladin and Alchemist";
+
+    cin >> archetype1;
+
+    while(archetype1 != "paladin" && archetype1 != "Paladin" && archetype1 != "alchemist" && archetype1 != "Alchemist") {
+
+        cout << "Invalid archetype! Please choose either Paladin or Alchemist: ";
+
+        cin >> archetype1;
+
+    }
+
+    cout << playerO << "choose an archetype between Paladin and Alchemist";
+
+    cin >> archetype2;
+
+    while(archetype2 != "paladin" && archetype2 != "Paladin" && archetype2 != "alchemist" && archetype2 != "Alchemist") {
+
+        cout << "Invalid archetype! Please choose either Paladin or Alchemist: ";
+
+        cin >> archetype2;
+
+    }
+
+    turn = char1;
+
+    string currentArchetype;
+    string currentChar;
+
+    while(gameEnd == false) {
+
+        displayBoard();
+        
+        if (turn == char1) {
+
+            currentChar = playerX;
+            currentArchetype = archetype1;
+        }
+
+        else {
+
+            currentChar = playerO;
+            currentArchetype = archetype2;
+        }
+
+
+    }
+}
+
 int main() {
 
     testCases();
