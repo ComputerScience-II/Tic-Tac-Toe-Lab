@@ -451,7 +451,7 @@ void battleMode() {
 
                 if(boardCounter < 2) {
 
-                    cout << "Not enough pieces on board to perform special move.\n";
+                    cout << "Not enough pieces on board to perform special move yet.\n";
                     
                 }
 
@@ -486,6 +486,7 @@ void battleMode() {
             else if((currentArchetype == "Paladin") || (currentArchetype == "paladin")) {
 
                int boardCounter = 0;
+               int slotFrom, slotTo;
 
                 for(int i = 0; i < 9; i++) {
 
@@ -497,32 +498,147 @@ void battleMode() {
 
                 if (boardCounter < 1) {
 
-                    cout << "Not enough pieces on board to perform special move.\n";
+                    cout << "Not enough pieces on board to perform special move yet.\n";
                     
                 }
+
+                cout << "Enter the slot number of the piece you want to move: ";
+
+                cin >> slotFrom;
+
+                slotFrom - 1;
+
+                if(slotFrom < 0 || slotFrom > 8) {
+
+                    cout << "Invalid slot number!";
+
+                }
+
+                if ( selections[slotFrom] != char1 && selections[slotFrom] != char2) {
+
+                    cout << "there are no pieces to move here";
+
+                }
+
+                cout << "Enter the slot number you want to move to: ";
+
+                cin >> slotTo;
+
+                slotTo - 1;
+
+                if (slotTo < 0 || slotTo > 8 || selections[slotTo] == char1 || selections[slotTo] == char2) {
+
+                        cout << "Invalid or occupied slots.";
+
+                }
+
+                if(!isAdjacent(slotFrom, slotTo)) {
+
+                    cout << "Slots are not adjacent!";
+
+                }
+
+                selections[slotTo] = selections[slotFrom];
+
+                selections[slotFrom] = '1' + slotFrom;
 
                
             }
 
-            
+            else {
+
+                cout << "Invalid choice!";
+            }
+
+            if(checkWin()) {
+
+                displayBoard();
+
+                cout << "Player " << currentChar << " wins!\n";
+
+                gameEnd = true;
+
+            }
+
+            else {
+
+                if(checkTie()) {
+
+                    displayBoard();
+
+                    cout << "Game has ended in a tie.\n";
+
+                    gameEnd = true;
+
+                }
+
+                else {
+
+                    if(turn == char1) {
+
+                        turn = char2;
+
+                    }
+
+                    else {
+
+                        turn = char1;
+
+                    }
+
+                }
+            }
+
+    
+            cout << "Do you want to play another game? (y/n): ";
+
+            char continueGame;
+
+            cin >> continueGame;
+
+
+    
+
+    
         }
-
-    
-
-    
-
-    
     }
+
 }
 
 int main() {
 
-    testCases();
+    char gameMode;
 
-    resetGame();
+    cout << "-----TIC TAC TOE-----\n";
 
-   
+    cout << "Select Game Mode:\n";
 
-    cout << "Thanks for playing\n";
+    cout << "1. Normal Game\n";
+
+    cout << "2. Battle Mode\n";
+
+    cin >> gameMode;
+
+    if (gameMode == '1') {
+
+        normalGame();
+
+    }
+
+    else if (gameMode == '2') {
+
+        battleMode();
+
+    }
+
+    else {
+
+        cout << "Invalid game mode selected!\n";
+
+    }
+
+    cout << "Thank you for playing Tic Tac Toe!\n";
+
+
     return 0;
 }
