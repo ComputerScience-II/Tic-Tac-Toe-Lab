@@ -3,10 +3,17 @@
 using namespace std;
 
 const int TOTAL_SLOTS = 9;
+
+bool moveValid = false;
+
 char selections[TOTAL_SLOTS] = {'1','2','3','4','5','6','7','8','9'};
+
 const int WINNING_COMBOS[8][3] = {{0,1,2}, {3,4,5}, {6,7,8},{0,3,6}, {1,4,7}, {2,5,8},{0,4,8}, {2,4,6}};
+
 char turn = 'X';
+
 bool gameEnd = false;
+
 char choice;
 
 bool checkWin() {
@@ -207,14 +214,13 @@ void normalGame() {
 
     string playerX, playerO;
 
-    cout << "Enter name for Player X: ";
+    cout << "Enter name for Player X: \n";
 
-    getline(cin, playerX);
+    cin >> playerX;
 
-    cout << "Enter name for Player O: ";
+    cout << "Enter name for Player O:\n ";
 
-    getline(cin, playerO);
-
+    cin >> playerO;
 
     char continueGame = 'y';
 
@@ -226,7 +232,17 @@ void normalGame() {
 
             displayBoard();
 
-            cout << "Player " << turn << ", enter a digit: ";
+            string playername;
+
+            if (turn == 'X') {
+
+                playername = playerX;
+            } 
+            else {
+                playername = playerO;
+            }
+
+            cout << "Player " << playername << ", enter a digit: \n";
 
             cin >> choice;
 
@@ -290,10 +306,12 @@ void normalGame() {
                 }
             }
 
-        cout << "Do you want to play another round? (y/n): ";
+        cout << "Do you want to play another round of this gamemode? (y/n): \n";
 
         cin >> continueGame;
+
         cin.ignore(500, '\n');
+
         }
 
 
@@ -340,57 +358,57 @@ void battleMode() {
     char char1, char2;
     string archetype1, archetype2;
 
-    cout << "Enter name for Player X: ";
+    cout << "Enter name for Player X: \n";
 
-    getline(cin, playerX);
+    cin >> playerX;
 
-    cout << "Enter name for Player O: ";
+    cout << "Enter name for Player O: \n";
 
-    getline(cin, playerO);
-
-    cout << "Player " << playerX << ", choose your character symbol: ";
+    cin >> playerO;
+    
+    cout << "Player " << playerX << ", choose your character symbol: \n";
 
     cin >> char1;
 
     while (!characterChecker(char1)) {
 
-        cout << "Invalid character! Please choose a valid character symbol: ";
+        cout << "Invalid character! Please choose a valid character symbol:\n ";
 
         cin >> char1;
 
     }
 
-    cout << "Player " << playerO << ", choose your character symbol: ";
+    cout << "Player " << playerO << ", choose your character symbol:\n ";
 
     cin >> char2;
 
     while (!characterChecker(char2)) {
 
-        cout << "Invalid character! Please choose a valid character symbol: ";
+        cout << "Invalid character! Please choose a valid character symbol: \n";
 
         cin >> char2;
 
     }
 
-    cout << playerX << "choose an archetype between Paladin and Alchemist";
+    cout << playerX << " choose an archetype between Paladin and Alchemist\n";
 
     cin >> archetype1;
 
     while(archetype1 != "paladin" && archetype1 != "Paladin" && archetype1 != "alchemist" && archetype1 != "Alchemist") {
 
-        cout << "Invalid archetype! Please choose either Paladin or Alchemist: ";
+        cout << "Invalid archetype! Please choose either Paladin or Alchemist: \n";
 
         cin >> archetype1;
 
     }
 
-    cout << playerO << "choose an archetype between Paladin and Alchemist";
+    cout << playerO << " choose an archetype between Paladin and Alchemist\n";
 
     cin >> archetype2;
 
     while(archetype2 != "paladin" && archetype2 != "Paladin" && archetype2 != "alchemist" && archetype2 != "Alchemist") {
 
-        cout << "Invalid archetype! Please choose either Paladin or Alchemist: ";
+        cout << "Invalid archetype! Please choose either Paladin or Alchemist: \n";
 
         cin >> archetype2;
 
@@ -417,7 +435,7 @@ void battleMode() {
             currentArchetype = archetype2;
         }
 
-        cout << "Player " << currentChar << " (" << turn << "), choose a move: ";
+        cout << "Player " << currentChar << " (" << turn << "), choose a move: \n";
 
         cout << "1. Regular Move\n";
         cout << "2. Special Move\n";
@@ -451,9 +469,42 @@ void battleMode() {
 
             selections[a] = turn;
 
+            if(checkWin()) {
+
+                displayBoard();
+
+                cout << "Player " << currentChar << " wins!\n";
+
+                gameEnd = true;
+
+            }
+
+            else if (checkTie()) {
+
+                displayBoard();
+
+                cout << "Game has ended in a tie.\n";
+
+                gameEnd = true;
+
+            }
+
+            else {
+
+                if (turn == char1) {
+
+                    turn = char2;
+                } 
+                else {
+                    turn = char1;
+                }
+            }
+
         }
 
         else if (moveChoice == 2) {
+
+            
 
             if((currentArchetype == "Alchemist") || (currentArchetype == "alchemist")) {
 
@@ -470,10 +521,12 @@ void battleMode() {
                 if(boardCounter < 2) {
 
                     cout << "Not enough pieces on board to perform special move yet.\n";
+
+                    continue;
                     
                 }
 
-                cout << "Enter the slot numbers of the pieces you want to swap: ";
+                cout << "Enter the slot numbers of the pieces you want to swap: \n";
 
                 int slot1, slot2;
 
@@ -493,12 +546,29 @@ void battleMode() {
 
                 }
 
+                if( selections[slot1] >= '1' && selections[slot1] <= '9') {
+
+                    cout << "There is no piece to swap in slot " << slot1 + 1 << ".\n";
+
+                    continue;
+
+                }
+
+                if( selections[slot2] >= '1' && selections[slot2] <= '9') {
+
+                    cout << "There is no piece to swap in slot " << slot2 + 1 << ".\n";
+
+                    continue;
+
+                }
+
                 char aTemp = selections[slot1];
 
                 selections[slot1] = selections[slot2];
 
                 selections[slot2] = aTemp;
 
+                moveValid = true;
             }
 
             else if((currentArchetype == "Paladin") || (currentArchetype == "paladin")) {
@@ -517,10 +587,12 @@ void battleMode() {
                 if (boardCounter < 1) {
 
                     cout << "Not enough pieces on board to perform special move yet.\n";
+
+                    continue;
                     
                 }
 
-                cout << "Enter the slot number of the piece you want to move: ";
+                cout << "Enter the slot number of the piece you want to move:\n ";
 
                 cin >> slotFrom;
 
@@ -528,17 +600,24 @@ void battleMode() {
 
                 if(slotFrom < 0 || slotFrom > 8) {
 
-                    cout << "Invalid slot number!";
+                    cout << "Invalid slot number!\n";
 
                 }
 
                 if ( selections[slotFrom] != char1 && selections[slotFrom] != char2) {
 
-                    cout << "there are no pieces to move here";
+                    cout << "there are no pieces to move here\n";
 
                 }
 
-                cout << "Enter the slot number you want to move to: ";
+                if (selections[slotFrom] >= '1' && selections[slotFrom] <= '9') {
+
+                    cout << "That slot is empty — you can only move actual pieces.\n";
+                    continue;
+
+                }
+
+                cout << "Enter the slot number you want to move to:\n ";
 
                 cin >> slotTo;
 
@@ -546,13 +625,13 @@ void battleMode() {
 
                 if (slotTo < 0 || slotTo > 8 || selections[slotTo] == char1 || selections[slotTo] == char2) {
 
-                        cout << "Invalid or occupied slots.";
+                        cout << "Invalid or occupied slots.\n";
 
                 }
 
                 if(!isAdjacent(slotFrom, slotTo)) {
 
-                    cout << "Slots are not adjacent!";
+                    cout << "Slots are not adjacent!\n";
                     continue;
 
                 }
@@ -561,15 +640,22 @@ void battleMode() {
 
                 selections[slotFrom] = '1' + slotFrom;
 
+                moveValid = true;
+
                
             }
 
             else {
 
-                cout << "Invalid choice!";
+                cout << "Invalid choice!\n";
             }
 
-            if(checkWin()) {
+           
+        }
+
+        if(moveValid) {
+
+            if (checkWin()) {
 
                 displayBoard();
 
@@ -579,35 +665,27 @@ void battleMode() {
 
             }
 
+            else if (checkTie()) {
+
+                displayBoard();
+
+                cout << "Game has ended in a tie.\n";
+
+                gameEnd = true;
+
+            }
+
             else {
 
-                if(checkTie()) {
+                if (turn == char1) {
 
-                    displayBoard();
-
-                    cout << "Game has ended in a tie.\n";
-
-                    gameEnd = true;
-
-                }
-
+                    turn = char2;
+                } 
                 else {
-
-                    if(turn == char1) {
-
-                        turn = char2;
-
-                    }
-
-                    else {
-
-                        turn = char1;
-
-                    }
-
+                    turn = char1;
                 }
             }
-        }
+        }   
 
     }
 
@@ -628,8 +706,7 @@ int main() {
     cout << "2. Battle Mode\n";
 
     cin >> gameMode;
-
-    cin.ignore(500, '\n');
+    
 
 
 
@@ -651,7 +728,7 @@ int main() {
 
     }
 
-    cout << "Do you want to play again? (y/n): ";
+    cout << "Do you want to go back to the main menu? (y/n): \n";
 
     cin >> choice;
 
@@ -661,7 +738,7 @@ int main() {
 
         cin.ignore(500, '\n');     
 
-        cout << "Invalid input. Please enter y or n: ";
+        cout << "Invalid input. Please enter y or n:\n ";
 
         cin >> choice;   
 
