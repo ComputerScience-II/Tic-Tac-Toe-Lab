@@ -2,19 +2,19 @@
 #include <cassert>
 using namespace std;
 
-char selections[] = {'1','2','3','4','5','6','7','8','9'};
+const int TOTAL_SLOTS = 9;
+char selections[TOTAL_SLOTS] = {'1','2','3','4','5','6','7','8','9'};
+const int WINNING_COMBOS[8][3] = {{0,1,2}, {3,4,5}, {6,7,8},{0,3,6}, {1,4,7}, {2,5,8},{0,4,8}, {2,4,6}};
 char turn = 'X';
-char choice;
 bool gameEnd = false;
+char choice;
 
 bool checkWin() {
 
-    int winningCombinations[8][3] = {{0,1,2}, {3,4,5}, {6,7,8},{0,3,6}, {1,4,7}, {2,5,8},{0,4,8}, {2,4,6}};
 
     for (int i = 0; i < 8; i++) {
 
-        if (selections[winningCombinations[i][0]] == turn && selections[winningCombinations[i][1]] == turn && selections[winningCombinations[i][2]] == turn) {
-
+        if (selections[WINNING_COMBOS[i][0]] == turn && selections[WINNING_COMBOS[i][1]] == turn && selections[WINNING_COMBOS[i][2]] == turn) {
             return true;
         }
     }
@@ -23,7 +23,8 @@ bool checkWin() {
 
 bool checkTie() {
 
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < TOTAL_SLOTS; i++) {
+
         if (selections[i] != 'X' && selections[i] != 'O') return false;
     }
     return true;
@@ -32,7 +33,7 @@ bool checkTie() {
 
 void resetGame() {
 
-    for (int i = 0; i < 9; i++) selections[i] = '1' + i;
+    for (int i = 0; i < TOTAL_SLOTS; i++) selections[i] = '1' + i;
     turn = 'X';
     gameEnd = false;
 
@@ -174,6 +175,14 @@ bool characterChecker(char a) {
         return true;
     }
 
+    if(a == 'X' || a == 'O' || a == 'x' || a == 'o') {
+
+        cout << "Character cannot be X or O. Please choose another character.\n";
+
+        return false;
+    }
+
+
     return false;
 }
 
@@ -215,13 +224,7 @@ void normalGame() {
 
         while (!gameEnd) {
 
-            for (int i = 0; i < 9; i++) {
-
-                cout << selections[i];
-                if (i % 3 != 2) cout << " | ";
-                else if (i != 8) cout << "\n---------\n";
-                else cout << "\n\n";
-            }
+            displayBoard();
 
             cout << "Player " << turn << ", enter a digit: ";
 
@@ -249,11 +252,15 @@ void normalGame() {
             selections[a] = turn;
 
            if (checkWin()) {
+
+                displayBoard();
+
                 if (turn == 'X') {
+
                     cout << "Player " << playerX << " wins!\n";
                 }       
                 
-            else {
+                else {
                 cout << "Player " << playerO << " wins!\n";
 
             }
@@ -262,44 +269,38 @@ void normalGame() {
 
             } 
 
-            else {
-                if (checkTie()) {
+            else if (checkTie()) {
+
+                    displayBoard();
 
                     cout << "Game has ended in a tie.\n";
+
                     gameEnd = true;
 
                 } 
-                else {
+            else {
 
-                    if (turn == 'X') {
+                if (turn == 'X') {
                         
-                        turn = 'O';
-                    } 
-                    else {
-                        turn = 'X';
+                    turn = 'O';
+                } 
+                else {
+                     turn = 'X';
                     }
                 }
             }
-        }
 
-        cout << "Do you want to play another game? (y/n): ";
+        cout << "Do you want to play another round? (y/n): ";
 
         cin >> continueGame;
-
-        while (cin.fail() || (continueGame != 'y' && continueGame != 'Y' && continueGame != 'n' && continueGame != 'N')){
-
-            cin.clear();            
-
-            cin.ignore(500, '\n');     
-
-            cout << "Invalid input. Please enter y or n: ";
-
-            cin >> continueGame;   
+        cin.ignore(500, '\n');
         }
 
-    }
+
 
 }
+
+
 
 bool isAdjacent(int slot1, int slot2) {
 
@@ -308,7 +309,22 @@ bool isAdjacent(int slot1, int slot2) {
         return false;
     }
 
-    if (slot1 == slot2 - 1 || slot1 == slot2 + 1 || slot1 == slot2 - 3 || slot1 == slot2 + 3) {
+    if(slot1 == slot2 - 1 && slot1 % 3 != 2) {
+
+        return true;
+    }
+
+    if(slot1 == slot2 + 1 && slot1 % 3 != 0) {
+
+        return true;
+    }
+
+    if(slot1 - slot2 == 3) {
+
+        return true;
+    }
+
+    if(slot2 - slot1 == 3) {
 
         return true;
     }
@@ -410,11 +426,13 @@ void battleMode() {
 
         cin >> moveChoice;
 
-        if(moveChoice = 1) {
+        if(moveChoice == 1) {
             
             cout << "Enter a slot number 1-9: ";
+            
             cin >> choice;
 
+        
             if (cin.fail() || choice < '1' || choice > '9') {
                     cin.clear(); cin.ignore(50000, '\n');
                     cout << "Invalid input!\n";
@@ -435,7 +453,7 @@ void battleMode() {
 
         }
 
-        else if (moveChoice = 2) {
+        else if (moveChoice == 2) {
 
             if((currentArchetype == "Alchemist") || (currentArchetype == "alchemist")) {
 
@@ -461,8 +479,8 @@ void battleMode() {
 
                 cin >> slot1 >> slot2;
 
-                slot1 - 1;
-                slot2 - 1;
+                slot1 -= 1;
+                slot2 -= 1;
 
                 if(slot1 < 0 || slot1 > 8 || slot2 < 0 || slot2 > 8) {
 
@@ -506,7 +524,7 @@ void battleMode() {
 
                 cin >> slotFrom;
 
-                slotFrom - 1;
+                slotFrom -= 1;
 
                 if(slotFrom < 0 || slotFrom > 8) {
 
@@ -524,7 +542,7 @@ void battleMode() {
 
                 cin >> slotTo;
 
-                slotTo - 1;
+                slotTo -= 1;
 
                 if (slotTo < 0 || slotTo > 8 || selections[slotTo] == char1 || selections[slotTo] == char2) {
 
@@ -535,6 +553,7 @@ void battleMode() {
                 if(!isAdjacent(slotFrom, slotTo)) {
 
                     cout << "Slots are not adjacent!";
+                    continue;
 
                 }
 
@@ -588,19 +607,8 @@ void battleMode() {
 
                 }
             }
-
-    
-            cout << "Do you want to play another game? (y/n): ";
-
-            char continueGame;
-
-            cin >> continueGame;
-
-
-    
-
-    
         }
+
     }
 
 }
@@ -608,6 +616,8 @@ void battleMode() {
 int main() {
 
     char gameMode;
+
+    while (choice != 'n' && choice != 'N') {
 
     cout << "-----TIC TAC TOE-----\n";
 
@@ -618,6 +628,10 @@ int main() {
     cout << "2. Battle Mode\n";
 
     cin >> gameMode;
+
+    cin.ignore(500, '\n');
+
+
 
     if (gameMode == '1') {
 
@@ -634,6 +648,26 @@ int main() {
     else {
 
         cout << "Invalid game mode selected!\n";
+
+    }
+
+    cout << "Do you want to play again? (y/n): ";
+
+    cin >> choice;
+
+    while(cin.fail() || (choice != 'y' && choice != 'Y' && choice != 'n' && choice != 'N')){
+
+        cin.clear();            
+
+        cin.ignore(500, '\n');     
+
+        cout << "Invalid input. Please enter y or n: ";
+
+        cin >> choice;   
+
+    }
+
+    cin.ignore(500, '\n');
 
     }
 
