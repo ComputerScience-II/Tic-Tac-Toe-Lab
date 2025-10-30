@@ -170,6 +170,27 @@ void testCases() {
     turn = 'X';
     assert(checkWin() == false);
     assert(checkTie() == false);
+
+    assert(isAdjacent(0,1) == true);
+
+    assert(isAdjacent(0,3) == true);
+
+    assert(isAdjacent(1,2) == true);
+
+    selections[0]='X';
+    selections[1]='O';
+    selections[2]='X';
+    selections[3]='4';
+    selections[4]='X';
+    selections[5]='6';
+    selections[6]='7';
+    selections[7]='8';
+    selections[8]='9';
+
+    assert(isAdjacent(0,2) == false);
+    assert(isAdjacent(0,4) == false);
+
+    
     
 
 
@@ -612,7 +633,7 @@ void battleMode() {
 
                 if (selections[slotFrom] >= '1' && selections[slotFrom] <= '9') {
 
-                    cout << "That slot is empty — you can only move actual pieces.\n";
+                    cout << "That slot is empty you can only move actual pieces.\n";
                     continue;
 
                 }
@@ -693,6 +714,8 @@ void battleMode() {
 
 int main() {
 
+    testCases();
+
     char gameMode;
 
     while (choice != 'n' && choice != 'N') {
@@ -750,6 +773,7 @@ int main() {
 
     cout << "Thank you for playing Tic Tac Toe!\n";
 
+    cin.ignore(500, '\n');
 
     return 0;
 }
