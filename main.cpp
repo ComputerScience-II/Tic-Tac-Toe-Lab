@@ -16,6 +16,32 @@ bool gameEnd = false;
 
 char choice;
 
+void randomEarthquake(){
+
+    int a = rand() % 9;
+    int b = rand() % 9;
+
+    cout << "A sudden earthquake has shaken up the whole board! The following slots have been swapped " << a + 1 << " and " << b + 1 << " !\n";
+
+    char x = selections[a];
+    selections[a] = selections[b];
+    selections[b] = x;
+}
+
+void snakeAttack() {
+
+    int f[9];
+    int count = 0;
+
+    for(int i = 0; i < 9; i++) {
+
+        if(selections[i] == 'X');
+
+    }
+
+
+
+}
 bool checkWin() {
 
 
@@ -46,155 +72,7 @@ void resetGame() {
 
 }
 
-void testCases() {
 
-    selections[0]='X'; 
-    selections[1]='X'; 
-    selections[2]='X';
-    selections[3]='O'; 
-    selections[4]='O'; 
-    selections[5]='5';
-    selections[6]='6'; 
-    selections[7]='7'; 
-    selections[8]='8';
-
-    turn = 'X';
-
-    assert(checkWin() == true);
-
-    selections[0]='1'; 
-    selections[1]='2'; 
-    selections[2]='3';
-
-    selections[3]='X'; 
-    selections[4]='X'; 
-    selections[5]='X';
-    selections[6]='O'; 
-    selections[7]='O'; 
-    selections[8]='9';
-
-    turn = 'X';
-    assert(checkWin() == true);
-
-    selections[0]='O'; 
-    selections[1]='2'; 
-    selections[2]='3';
-    selections[3]='O';
-    selections[4]='5'; 
-    selections[5]='6';
-    selections[6]='O'; 
-    selections[7]='8'; 
-    selections[8]='9';
-
-    turn = 'O';
-    assert(checkWin() == true);
-
-    selections[0]='X'; 
-    selections[1]='2'; 
-    selections[2]='3';
-    selections[3]='4'; 
-    selections[4]='X'; 
-    selections[5]='6';
-    selections[6]='7'; 
-    selections[7]='8'; 
-    selections[8]='X';
-
-    turn = 'X';
-    assert(checkWin() == true);
-
-    selections[0]='1'; 
-    selections[1]='2'; 
-    selections[2]='O';
-    selections[3]='4'; 
-    selections[4]='O'; 
-    selections[5]='6';
-    selections[6]='O'; 
-    selections[7]='8'; 
-    selections[8]='9';
-
-    turn = 'O';
-    assert(checkWin() == true);
-
-    selections[0]='X'; 
-    selections[1]='O'; 
-    selections[2]='X';
-    selections[3]='O'; 
-    selections[4]='X'; 
-    selections[5]='O';
-    selections[6]='O'; 
-    selections[7]='X';
-    selections[8]='9';
-
-    turn = 'X';
-    assert(checkWin() == false);
-    assert(checkTie() == false);
-
-    selections[0]='X'; 
-    selections[1]='O'; 
-    selections[2]='X';
-    selections[3]='O'; 
-    selections[4]='X'; 
-    selections[5]='O';
-    selections[6]='O';
-    selections[7]='X'; 
-    selections[8]='O';
-
-    turn = 'X';
-    assert(checkWin() == false);
-    assert(checkTie() == true);
-
-    selections[0]='1'; 
-    selections[1]='2'; 
-    selections[2]='3';
-    selections[3]='4'; 
-    selections[4]='X';
-    selections[5]='6';
-    selections[6]='7'; 
-    selections[7]='8';
-    selections[8]='9';
-
-    turn = 'X';
-    assert(checkWin() == false);
-    assert(checkTie() == false);
-
-    selections[0]='X';
-    selections[1]='O'; 
-    selections[2]='X';
-    selections[3]='4'; 
-    selections[4]='X';
-    selections[5]='6';
-    selections[6]='7'; 
-    selections[7]='8';
-    selections[8]='9';
-
-    turn = 'X';
-    assert(checkWin() == false);
-    assert(checkTie() == false);
-
-    assert(isAdjacent(0,1) == true);
-
-    assert(isAdjacent(0,3) == true);
-
-    assert(isAdjacent(1,2) == true);
-
-    selections[0]='X';
-    selections[1]='O';
-    selections[2]='X';
-    selections[3]='4';
-    selections[4]='X';
-    selections[5]='6';
-    selections[6]='7';
-    selections[7]='8';
-    selections[8]='9';
-
-    assert(isAdjacent(0,2) == false);
-    assert(isAdjacent(0,4) == false);
-
-    
-    
-
-
-}
 
 bool characterChecker(char a) { 
 
@@ -712,11 +590,162 @@ void battleMode() {
 
 }
 
+
+
+void testCases() {
+
+    selections[0]='X'; 
+    selections[1]='X'; 
+    selections[2]='X';
+    selections[3]='O'; 
+    selections[4]='O'; 
+    selections[5]='5';
+    selections[6]='6'; 
+    selections[7]='7'; 
+    selections[8]='8';
+
+    turn = 'X';
+
+    assert(checkWin() == true);
+
+    selections[0]='1'; 
+    selections[1]='2'; 
+    selections[2]='3';
+
+    selections[3]='X'; 
+    selections[4]='X'; 
+    selections[5]='X';
+    selections[6]='O'; 
+    selections[7]='O'; 
+    selections[8]='9';
+
+    turn = 'X';
+    assert(checkWin() == true);
+
+    selections[0]='O'; 
+    selections[1]='2'; 
+    selections[2]='3';
+    selections[3]='O';
+    selections[4]='5'; 
+    selections[5]='6';
+    selections[6]='O'; 
+    selections[7]='8'; 
+    selections[8]='9';
+
+    turn = 'O';
+    assert(checkWin() == true);
+
+    selections[0]='X'; 
+    selections[1]='2'; 
+    selections[2]='3';
+    selections[3]='4'; 
+    selections[4]='X'; 
+    selections[5]='6';
+    selections[6]='7'; 
+    selections[7]='8'; 
+    selections[8]='X';
+
+    turn = 'X';
+    assert(checkWin() == true);
+
+    selections[0]='1'; 
+    selections[1]='2'; 
+    selections[2]='O';
+    selections[3]='4'; 
+    selections[4]='O'; 
+    selections[5]='6';
+    selections[6]='O'; 
+    selections[7]='8'; 
+    selections[8]='9';
+
+    turn = 'O';
+    assert(checkWin() == true);
+
+    selections[0]='X'; 
+    selections[1]='O'; 
+    selections[2]='X';
+    selections[3]='O'; 
+    selections[4]='X'; 
+    selections[5]='O';
+    selections[6]='O'; 
+    selections[7]='X';
+    selections[8]='9';
+
+    turn = 'X';
+    assert(checkWin() == false);
+    assert(checkTie() == false);
+
+    selections[0]='X'; 
+    selections[1]='O'; 
+    selections[2]='X';
+    selections[3]='O'; 
+    selections[4]='X'; 
+    selections[5]='O';
+    selections[6]='O';
+    selections[7]='X'; 
+    selections[8]='O';
+
+    turn = 'X';
+    assert(checkWin() == false);
+    assert(checkTie() == true);
+
+    selections[0]='1'; 
+    selections[1]='2'; 
+    selections[2]='3';
+    selections[3]='4'; 
+    selections[4]='X';
+    selections[5]='6';
+    selections[6]='7'; 
+    selections[7]='8';
+    selections[8]='9';
+
+    turn = 'X';
+    assert(checkWin() == false);
+    assert(checkTie() == false);
+
+    selections[0]='X';
+    selections[1]='O'; 
+    selections[2]='X';
+    selections[3]='4'; 
+    selections[4]='X';
+    selections[5]='6';
+    selections[6]='7'; 
+    selections[7]='8';
+    selections[8]='9';
+
+    turn = 'X';
+    assert(checkWin() == false);
+    assert(checkTie() == false);
+
+    assert(isAdjacent(0,1) == true);
+
+    assert(isAdjacent(0,3) == true);
+
+    assert(isAdjacent(1,2) == true);
+
+    selections[0]='X';
+    selections[1]='O';
+    selections[2]='X';
+    selections[3]='4';
+    selections[4]='X';
+    selections[5]='6';
+    selections[6]='7';
+    selections[7]='8';
+    selections[8]='9';
+
+    assert(isAdjacent(0,2) == false);
+    assert(isAdjacent(0,4) == false);
+
+
+}
+
 int main() {
 
     testCases();
 
     char gameMode;
+
+    char choice = 'y';
 
     while (choice != 'n' && choice != 'N') {
 
