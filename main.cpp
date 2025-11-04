@@ -24,21 +24,92 @@ void randomEarthquake(){
     cout << "A sudden earthquake has shaken up the whole board! The following slots have been swapped " << a + 1 << " and " << b + 1 << " !\n";
 
     char x = selections[a];
+
     selections[a] = selections[b];
+
     selections[b] = x;
 }
 
 void snakeAttack() {
 
     int f[9];
+
     int count = 0;
 
     for(int i = 0; i < 9; i++) {
 
-        if(selections[i] == 'X');
+        if(selections[i] == 'X' || selections[i] == 'O') {
+            f[count++] = i;
 
+        }
     }
 
+    if(count == 0) {
+        return;
+    }
+
+    int attackTarget = f[rand() % count];
+
+    cout << "A snake suddenly spits its venom on slot " << attackTarget + 1 << " and destroyed the input there.\n";
+
+    selections[attackTarget] = '1' + attackTarget;
+
+}
+
+void luckyLanding() {
+
+    int e[9], count = 0;
+
+    for(int i = 0; i < 9; i++) {
+
+        if(selections[i] >= '1' && selections[i] <= '9') {
+            e[count++] = i;
+        }
+    }
+
+    if(count == 0) {
+
+        return;
+    }
+
+    int luckyLanding = e[ rand() % count];
+
+    cout << "Someone just got a lucky landing, slot " << luckyLanding + 1 << " is now marked as " << turn << ".\n";
+
+    selections[luckyLanding] = turn;
+
+}
+
+void randomOperator() {
+
+    int chanceOfAnyHappening = rand() % 100;
+
+    if (chanceOfAnyHappening >= 20) {
+
+        return;
+    }
+
+    int r = rand() % 100;
+
+    if( r < 10) {
+
+        randomEarthquake();
+    }
+
+    r = rand() % 100;
+
+    if (r < 10) {
+        
+        snakeAttack();     
+    }
+
+    r = rand() % 100;
+
+    if (r < 10){
+
+        luckyLanding();
+
+    } 
 
 
 }
@@ -165,6 +236,8 @@ void normalGame() {
             
 
             selections[a] = turn;
+
+            randomOperator();
 
            if (checkWin()) {
 
@@ -368,6 +441,8 @@ void battleMode() {
 
             selections[a] = turn;
 
+            randomOperator();
+
             if(checkWin()) {
 
                 displayBoard();
@@ -468,6 +543,8 @@ void battleMode() {
                 selections[slot2] = aTemp;
 
                 moveValid = true;
+
+                randomOperator();
             }
 
             else if((currentArchetype == "Paladin") || (currentArchetype == "paladin")) {
@@ -540,6 +617,8 @@ void battleMode() {
                 selections[slotFrom] = '1' + slotFrom;
 
                 moveValid = true;
+
+                randomOperator();
 
                
             }
