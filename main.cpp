@@ -171,55 +171,52 @@ void resetBoard() {
     for(int i = 0; i < TOTAL_SLOTS; i++) selections[i]='1'+i;
 
     turn='X';
-    
+
     gameEnd=false;
 }
 
 int playerMove() {
 
-    char turn;
+    int choice;
 
-    while (true) {
+    while(true){
 
         cout << "Enter your move (1-9): ";
 
-        cin >> turn;
+        cin >> choice;
 
-        if (cin.fail() || turn < '1' || turn > '9') {
+        if(cin.fail() || choice<1 || choice>9){
 
             cin.clear();
-            cin.ignore(50000, '\n');
-            cout << "Invalid input! Enter a single digit between 1-9.\n";
+            cin.ignore(50000,'\n');
+            cout << "Invalid input!\n";
             continue;
         }
 
-        int a = turn - '0' - 1;
+        if(selections[choice-1] == player.symbol || selections[choice-1] == enemy.symbol){
 
-        if (selections[a] == player.symbol || selections[a] == enemy.symbol) {
-
-            cout << "This slot is already full!!.\n";
-
+            cout << "Slot already occupied!\n";
             continue;
         }
-        
-        return a;
+
+        return choice-1;
     }
 }
 
 int enemyMove() {
 
-    vector<int> availableSlots;
+    vector<int> available;
 
-    for (int i = 0; i < TOTAL_SLOTS; i++) {
+    for(int i = 0; i < TOTAL_SLOTS; i++){
 
-        if (selections[i] != player.symbol && selections[i] != enemy.symbol) {
+        if(selections[i]!=player.symbol && selections[i]!=enemy.symbol) {
 
-            availableSlots.push_back(i);
+            available.push_back(i);
         }
+
     }
-
-    return availableSlots[rand() % availableSlots.size()];
-
+    
+    return available[rand()%available.size()];
 }
 
 
@@ -275,17 +272,16 @@ bool characterChecker(char a) {
 
 void displayBoard() {
 
-    for (int i = 0; i < 9; i++) {
+    for(int i = 0; i < TOTAL_SLOTS; i++){
 
         cout << selections[i];
 
-        if (i % 3 != 2) cout << " | ";
+        if(i % 3 != 2) cout << " | ";
 
-        else if (i != 8) cout << "\n---------\n";
+        else if(i != 8) cout << "\n---------\n";
 
-        else cout << "\n\n";
+        else cout << "\n";
     }
-
 }
 
 void normalGame() {
