@@ -919,34 +919,36 @@ void shopMenu(Entity &player) {
     while(shopping) {
 
         cout << "\nWelcome to the dungeon shop! Each item costs 10 coins.\n";
+        
+        cout << "\n\nCurrent Wallet: " << wallet;
 
         cout << "1. Attack Potion (+10 Attack)\n";
         cout << "2. Health Potion (+20 Health)\n";
         cout << "3. Defense Potion (+10 Defense)\n";
         cout << "4. Exit Shop\n";
-        cout << "Enter your choice: ";
+        cout << "\n\nEnter your choice: \n\n";
         cin >> itemChoice;
 
         if(itemChoice == '1') {
 
-            if(wallet >= 10) { player.attack += 10; wallet -= 10; cout << "Attack increased! New attack: " << player.attack << "\n"; }
-            else cout << "Not enough coins!\n";
+            if(wallet >= 10) { player.attack += 10; wallet -= 10; cout << "\n\nAttack increased! New attack: " << player.attack << "\n"; }
+            else cout << "\n\nNot enough coins!\n";
 
         } 
         else if(itemChoice == '2') {
 
-            if(wallet >= 10) { player.health += 20; wallet -= 10; cout << "Health increased! New health: " << player.health << "\n"; }
-            else cout << "Not enough coins!\n";
+            if(wallet >= 10) { player.health += 20; wallet -= 10; cout << "\n\nHealth increased! New health: " << player.health << "\n"; }
+            else cout << "\n\nNot enough coins!\n";
         } 
 
         else if(itemChoice == '3') {
 
             if(wallet >= 10) { 
 
-                player.defense += 10; wallet -= 10; cout << "Defense increased! New defense: " << player.defense << "\n"; 
+                player.defense += 10; wallet -= 10; cout << "\n\nDefense increased! New defense: " << player.defense << "\n"; 
             }
 
-            else cout << "Not enough coins!\n";
+            else cout << "\n\nNot enough coins!\n";
         } 
 
         else if(itemChoice == '4') {
@@ -956,7 +958,7 @@ void shopMenu(Entity &player) {
         } 
 
         else {
-            cout << "Invalid choice.\n";
+            cout << "\n\nInvalid choice.\n";
         }
     }
 }
@@ -1210,7 +1212,7 @@ void campaignMode() {
     cout << "-------------------------------\n\n";
 
     cout << "\n\nCongratulations! You have defeated the Dragon and completed the Campaign Mode!\n";
-    
+
     cout << "-------------------------------\n\n";
 }
 
