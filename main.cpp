@@ -21,6 +21,8 @@ int battleRound = 0;
 
 int randomEventCounter = 0;
 
+int wallet = 0;
+
 struct Entity {
 
     string name; 
@@ -909,6 +911,55 @@ int EntityBattle(Entity &player, Entity &enemy) {
 }
 
 
+void shopMenu(Entity &player) {
+
+    char itemChoice;
+    bool shopping = true;
+
+    while(shopping) {
+
+        cout << "\nWelcome to the dungeon shop! Each item costs 10 coins.\n";
+
+        cout << "1. Attack Potion (+10 Attack)\n";
+        cout << "2. Health Potion (+20 Health)\n";
+        cout << "3. Defense Potion (+10 Defense)\n";
+        cout << "4. Exit Shop\n";
+        cout << "Enter your choice: ";
+        cin >> itemChoice;
+
+        if(itemChoice == '1') {
+
+            if(wallet >= 10) { player.attack += 10; wallet -= 10; cout << "Attack increased! New attack: " << player.attack << "\n"; }
+            else cout << "Not enough coins!\n";
+
+        } 
+        else if(itemChoice == '2') {
+
+            if(wallet >= 10) { player.health += 20; wallet -= 10; cout << "Health increased! New health: " << player.health << "\n"; }
+            else cout << "Not enough coins!\n";
+        } 
+
+        else if(itemChoice == '3') {
+
+            if(wallet >= 10) { 
+
+                player.defense += 10; wallet -= 10; cout << "Defense increased! New defense: " << player.defense << "\n"; 
+            }
+
+            else cout << "Not enough coins!\n";
+        } 
+
+        else if(itemChoice == '4') {
+
+            shopping = false;
+
+        } 
+
+        else {
+            cout << "Invalid choice.\n";
+        }
+    }
+}
 
 
 
@@ -918,6 +969,8 @@ void campaignMode() {
     Entity player;
 
     char continueStatus = 'y';
+
+    char shopChoice = 'y';
 
     cout << "----WELCOME TO CAMPAIGN MODE----\n\n\n";
 
@@ -995,7 +1048,9 @@ void campaignMode() {
 
     cout << "-------------------------------\n\n";
 
-    cout << "\n\nYou have defeated the Goblin! You may proceed deeper into the dungeon.\n";
+    cout << "\n\nYou have defeated the Goblin! You may proceed deeper into the dungeon. (Player has been given 10 coins).\n";
+
+    wallet += 10;
 
     cout << "\n\nwould you like to continue? (y/n): \n\n";
 
@@ -1106,6 +1161,7 @@ void campaignMode() {
     cout << "\n\n-------------------------------\n\n";
 
     cout << "\n\nAs your make your way to the peak the weather ambushes you and you are forced to take shelter in a cave.\n\n";
+
     cout << "\nInside the cave you find a sword, respectively named Exaclibur which increases your attack by 20 points.\n";
 
     player.attack += 20;
