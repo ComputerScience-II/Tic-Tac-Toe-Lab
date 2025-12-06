@@ -708,7 +708,7 @@ void StatsSetter(Entity &entity, string archetype) {
 
     if(archetype == "Paladin" || archetype == "paladin") {
 
-        entity.health = 200;
+        entity.health = 250;
 
         entity.attack = 50;
 
@@ -718,11 +718,11 @@ void StatsSetter(Entity &entity, string archetype) {
 
     else if(archetype == "Alchemist" || archetype == "alchemist") {
 
-        entity.health = 200;
+        entity.health = 250;
 
         entity.attack = 30;
 
-        entity.defense = 30;
+        entity.defense = 50;
 
     }
 
@@ -730,9 +730,9 @@ void StatsSetter(Entity &entity, string archetype) {
 
         entity.health = 100;
 
-        entity.attack = 20;
+        entity.attack = 30;
 
-        entity.defense = 10;
+        entity.defense = 30;
 
     }
 
@@ -740,9 +740,9 @@ void StatsSetter(Entity &entity, string archetype) {
 
         entity.health = 200;
 
-        entity.attack = 30;
+        entity.attack = 50;
 
-        entity.defense = 10;
+        entity.defense = 35;
 
     }
 
@@ -752,7 +752,7 @@ void StatsSetter(Entity &entity, string archetype) {
 
         entity.attack = 40;
 
-        entity.defense = 20;
+        entity.defense = 40;
 
     }
 
@@ -785,7 +785,7 @@ int EntityBattle(Entity &player, Entity &enemy) {
             if (cin.fail() || choice < '1' || choice > '9') {
 
                 cin.clear(); cin.ignore(50000, '\n');
-                cout << "Invalid input! Try again.\n";
+                cout << "\n\nInvalid input! Try again.\n\n";
                 continue;
             }
 
@@ -819,11 +819,10 @@ int EntityBattle(Entity &player, Entity &enemy) {
             }
         }
 
-        randomOperator();
-
         int result = 0;
+
         if (checkWin()) {
-            
+
             if (turn == player.symbol) {
                 result = 1;
             } 
@@ -834,7 +833,7 @@ int EntityBattle(Entity &player, Entity &enemy) {
         
         else if (checkTie()) {
 
-            cout << "\nThis round ended in a tie. No damage dealt.\n";
+            cout << "\n\nThis round ended in a tie. No damage dealt.\n\n";
             resetGame();            
             turn = player.symbol;   
             continue;              
@@ -851,8 +850,8 @@ int EntityBattle(Entity &player, Entity &enemy) {
                 if (damage < 0) damage = 0;
                 enemy.health -= damage;
 
-                cout << "\n" << player.name << " wins the round and deals " << damage 
-                << " damage to " << enemy.name << ".\n";
+                cout << "\n\n" << player.name << " wins the round and deals " << damage 
+                << " damage to " << enemy.name << ".\n\n";
             } 
 
             else if (result == -1) {
@@ -866,26 +865,26 @@ int EntityBattle(Entity &player, Entity &enemy) {
                     if (rand() % 2 == 0) {
 
                         enemyAttack += 15;
-                        cout << "\n" << enemy.name << " uses Rage and increases attack!\n";
+                        cout << "\n\n" << enemy.name << " uses Rage and increases attack!\n\n";
                     } 
 
                     else {
 
                         enemyDef += 15;
-                        cout << "\n" << enemy.name << " uses Shield and increases defense!\n";
+                        cout << "\n\n" << enemy.name << " uses Shield and increases defense!\n\n";
                     }
                 }
 
                 damage = enemyAttack - player.defense;
                 if (damage < 0) damage = 0;
                 player.health -= damage;
-                cout << "\n" << enemy.name << " wins the round and deals " << damage 
-                << " damage to " << player.name << ".\n";
+                cout << "\n\n" << enemy.name << " wins the round and deals " << damage 
+                << " damage to " << player.name << ".\n\n";
             } 
 
             else {
 
-                cout << "\nThis round ended in a tie. No damage dealt.\n";
+                cout << "\n\nThis round ended in a tie. No damage dealt.\n\n";
             }
 
             if (player.health > 0 && enemy.health > 0) {
