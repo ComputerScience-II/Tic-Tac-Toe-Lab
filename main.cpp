@@ -17,6 +17,10 @@ bool gameEnd = false;
 
 char choice;
 
+int battleRound = 0;
+
+int randomEventCounter = 0;
+
 struct Entity {
 
     string name; 
@@ -32,13 +36,18 @@ struct Entity {
     int defense;
 };
 
+
 vector<Entity> enemies {
 
     {"Goblin", "Monster", 'G', 50, 15, 5},
 
     {"Orc", "Monster", 'O', 80, 20, 10},
 
-    {"Dragon", "Boss", 'D', 200, 40, 20}
+    {"Giant", "Monster", 'T', 120, 25, 15},
+
+    {"Necromancer", "BossRoom Guard", 'N', 150, 30, 10},
+
+    {"Dragon", "Final Boss", 'D', 200, 40, 20}
 };
 
 void randomEarthquake(){
@@ -698,9 +707,9 @@ void StatsSetter(Entity &entity, string archetype) {
 
     if(archetype == "Paladin" || archetype == "paladin") {
 
-        entity.health = 150;
+        entity.health = 200;
 
-        entity.attack = 30;
+        entity.attack = 50;
 
         entity.defense = 20;
 
@@ -708,15 +717,176 @@ void StatsSetter(Entity &entity, string archetype) {
 
     else if(archetype == "Alchemist" || archetype == "alchemist") {
 
+        entity.health = 200;
+
+        entity.attack = 30;
+
+        entity.defense = 30;
+
+    }
+
+    else if (archetype == "Monster") {
+
         entity.health = 100;
 
-        entity.attack = 40;
+        entity.attack = 20;
 
         entity.defense = 10;
 
     }
 
+    else if (archetype == "BossRoom Guard") {
+
+        entity.health = 200;
+
+        entity.attack = 30;
+
+        entity.defense = 10;
+
+    }
+
+    else if (archetype == "Final Boss") {
+
+        entity.health = 300;
+
+        entity.attack = 40;
+
+        entity.defense = 20;
+
+    }
+
 }
+
+int EntityBattle(Entity &player, Entity &enemy) {
+
+    resetGame();
+
+    turn = player.symbol;
+
+    int result = 0;
+
+    while (player.health > 0 && enemy.health > 0) {
+
+        displayBoard();
+
+        if (turn == player.symbol) {
+
+            cout << "\n\n" << player.name << "'s turn. Enter a slot number 1-9: \n\n";
+
+            char choice;
+
+            cin >> choice;
+
+            int idx = choice - '0' - 1;
+
+            if (selections[idx] == player.symbol || selections[idx] == enemy.symbol) {
+
+                cout << "Slot full!\n";
+
+                continue;
+            }
+
+            selections[idx] = turn;
+        } 
+        else {
+
+            vector<int> freeSlots;
+
+            for (int i = 0; i < 9; i++)
+
+                if (selections[i] != player.symbol && selections[i] != enemy.symbol) {  
+
+                    freeSlots.push_back(i);
+
+                }
+
+            if (!freeSlots.empty()) {
+
+                int move = freeSlots[rand() % freeSlots.size()];
+
+                selections[move] = turn;
+
+                cout << "\n\n" << enemy.name << " placed its symbol in slot " << move + 1 << ".\n\n";
+            }
+        }
+
+        if (checkWin()) {
+
+            if (turn == player.symbol) {
+                
+                result = 1;
+            } 
+            else {
+
+                result = -1;
+            }
+
+        } else if (checkTie()) {
+
+            result = 0;
+        }
+
+        turn = (turn == player.symbol) ? enemy.symbol : player.symbol;
+
+        if (result != 0) break;
+    }
+
+    int damage = 0;
+
+    if (result == 1) {
+
+        damage = player.attack - enemy.defense;
+
+        if (damage < 0) damage = 0;
+
+        enemy.health -= damage;
+
+        cout << player.name << " wins and deals " << damage << " damage to " << enemy.name << ".\n";
+
+    } 
+    else if (result == -1) {
+
+        int enemyAttack = enemy.attack;
+        int enemyDef = enemy.defense;
+
+        if (enemy.type == "Final Boss" && rand() % 100 < 30) {
+
+            if (rand() % 2) {
+
+                enemyAttack += 15;
+                cout << enemy.name << " uses Rage and increases attack!\n";
+
+            } 
+            else {
+
+                enemyDef += 15;
+                cout << enemy.name << " uses Shield and increases defense!\n";
+
+            }
+        }
+
+        damage = enemyAttack - player.defense;
+
+        if (damage < 0) damage = 0;
+
+        player.health -= damage;
+
+        cout << "\n\n" << player.name << " loses and takes " << damage << " damage from " << enemy.name << ".\n\n";
+    } 
+    
+    else {
+        cout << "\n\nThis battle ended in a tie. No damage dealt.\n\n";
+    }
+
+    if (player.health > 0) {
+        return 1;
+    } 
+    else {
+        return -1;
+    }
+}
+
+
 
 
 void campaignMode() {
@@ -756,13 +926,140 @@ void campaignMode() {
 
     StatsSetter(player, player.type);
 
-    cout << "Your character " << player.name << " has been created with the following stats:\n";
+    cout << "\n\n-------------------------------\n\n";
+    cout << "Your character " << player.name << " has been created with the following stats:\n\n";
 
     cout << "Health: " << player.health << "\n";
     cout << "Attack: " << player.attack << "\n";
     cout << "Defense: " << player.defense << "\n";
 
+    cout << "\n\nLet the Campaign begin!\n\n";
+
+    cout << "-------------------------------\n\n";
+
+    cout << "You enter the dark dungeon, ready to face whatever challenges lie ahead.\n";
+
+    cout << "\n\nYour first opponent approaches...a Goblin\n\n";
+
+    Entity enemy1 = enemies[0];
+
+    StatsSetter(enemy1, enemy1.type);
+
+    int battleResult = EntityBattle(player, enemy1);
+
+    if(battleResult == -1) {
+
+        cout << "\n\nYou have been defeated by the Goblin. Game Over.\n";
+
+        return;
+
+    }
+
+    cout << "\n\nYou have defeated the Goblin! You may proceed deeper into the dungeon.\n";
+
+    cout << "\n\n-------------------------------\n\n";
+
+    cout << "\n\nAs you venture further into the dungeon you find a potion which increases your attack by 10 points.\n";
+
+    player.attack += 10;
+
+    cout << "\nYour attack is now " << player.attack << ".\n";
+
+    cout << "\n\n-------------------------------\n\n";
+
+    cout << "\n\nSoon after your drink the potion you walk into a room guarded by an Orc!\n\n";
+
+    Entity enemy2 = enemies[1];
+
+    StatsSetter(enemy2, enemy2.type);
+
+    battleResult = EntityBattle(player, enemy2);
+
+    if(battleResult == -1) {
+
+        cout << "\n\nYou have been defeated by the Orc. Game Over.\n";
+
+        return;
+
+    }
+
+    cout << "\n\nYou have defeated the Orc! You may proceed deeper into the dungeon.\n";
+
+    cout << "\n\n-------------------------------\n\n";
+
+    cout << "\n\nDeeper into the dungeon you find a mystical shield which increases your defense by 10 points.\n";
+
+    player.defense += 10;
+
+    cout << "\nYour defense is now " << player.defense << ".\n";
+    cout << "\n\n-------------------------------\n\n";
+
+    cout << "\n\nYou make your way out of the dungeon and through the forest in between the vast mountains.\n";
+
+    cout << "\n\nAs you reach the foot of the mountain range you are ambushed by a Giant!\n\n";
+
+    Entity enemy3 = enemies[2];
+
+    StatsSetter(enemy3, enemy3.type);
+
+    battleResult = EntityBattle(player, enemy3);
+
+    if(battleResult == -1) {
+
+        cout << "\n\nYou have been defeated by the Giant. Game Over.\n";
+
+        return;
+
+    }
+
+    cout << "\n\nYou bravely defeat the Giant and continue your journey up the mountain.\n";
+
+    cout << "\n\n-------------------------------\n\n";
+
+    cout << "\n\nAs your make your way to the peak the weather ambushes you and you are forced to take shelter in a cave.\n";
+    cout << "\nInside the cave you find a sword, respectively named Exaclibur which increases your attack by 20 points.\n";
+
+    player.attack += 20;
+
+    cout << "\nYour attack is now " << player.attack << ".\n";
+
+    cout << "\n\n-------------------------------\n\n";
+
+    cout << "\n\nYou exit the cave and reach the mountain peak, only to be confronted by the Necromancer guarding the Boss Room!\n\n";  
+    Entity enemy4 = enemies[3];
+
+    StatsSetter(enemy4, enemy4.type);
+
+    battleResult = EntityBattle(player, enemy4);
+
+    if(battleResult == -1) {
+
+        cout << "\n\nYou have been defeated by the Necromancer. Game Over.\n";
+
+        return;
+
+    }
+
+    cout << "\n\nYou have defeated the Necromancer! You may now enter the Boss Room.\n";
+
+    cout << "\n\n-------------------------------\n\n";
+
+    cout << "\n\nYou enter the Boss Room and face the final challenge...the Dragon!\n\n";
+    Entity enemy5 = enemies[4];
+
+    StatsSetter(enemy5, enemy5.type);
+
+    battleResult = EntityBattle(player, enemy5);
+
+    if(battleResult == -1) {
+
+        cout << "\n\nYou have been defeated by the Dragon. Game Over.\n";
+
+        return;
+
+    }
     
+    cout << "\n\nCongratulations! You have defeated the Dragon and completed the Campaign Mode!\n";
 
 }
 
