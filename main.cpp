@@ -34,20 +34,22 @@ struct Entity {
     int attack;
 
     int defense;
+
+    bool isFinalBoss;
 };
 
 
 vector<Entity> enemies {
 
-    {"Goblin", "Monster", 'G', 50, 15, 5},
+    {"Goblin", "Monster", 'G', 0, 0, 0,false},
 
-    {"Orc", "Monster", 'O', 80, 20, 10},
+    {"Orc", "Monster", 'O', 0, 0, 0, false},
 
-    {"Giant", "Monster", 'T', 120, 25, 15},
+    {"Giant", "Monster", 'T', 0, 0, 0, false},
 
-    {"Necromancer", "BossRoom Guard", 'N', 150, 30, 10},
+    {"Necromancer", "BossRoom Guard", 'N', 0, 0, 0, false},
 
-    {"Dragon", "Final Boss", 'D', 200, 40, 20}
+    {"Dragon", "Final Boss", 'D', 0, 0, 0, true}
 };
 
 void randomEarthquake(){
@@ -163,10 +165,11 @@ bool checkTie() {
 
     for (int i = 0; i < TOTAL_SLOTS; i++) {
 
-        if (selections[i] != 'X' && selections[i] != 'O') return false;
-    }
-    return true;
+        if (selections[i] >= '1' && selections[i] <= '9') return false;
 
+    }
+
+    return true;
 }
 
 void resetGame() {
@@ -756,12 +759,10 @@ void StatsSetter(Entity &entity, string archetype) {
 }
 
 int EntityBattle(Entity &player, Entity &enemy) {
-
+    
     resetGame();
 
     turn = player.symbol;
-
-    int result = 0;
 
     while (player.health > 0 && enemy.health > 0) {
 
@@ -769,18 +770,22 @@ int EntityBattle(Entity &player, Entity &enemy) {
 
         if (turn == player.symbol) {
 
+            if (checkTie()) {
+
+                cout << "\nThis round ended in a tie. No damage dealt.\n";
+                resetGame();
+                turn = player.symbol;
+                continue;
+            }
+
             cout << "\n\n" << player.name << "'s turn. Enter a slot number 1-9: \n\n";
-
             char choice;
-
             cin >> choice;
 
             if (cin.fail() || choice < '1' || choice > '9') {
 
                 cin.clear(); cin.ignore(50000, '\n');
-
                 cout << "Invalid input! Try again.\n";
-
                 continue;
             }
 
@@ -789,53 +794,50 @@ int EntityBattle(Entity &player, Entity &enemy) {
             if (selections[idx] == player.symbol || selections[idx] == enemy.symbol) {
 
                 cout << "\n\nSlot full! Choose another.\n\n";
-
                 continue;
             }
 
             selections[idx] = player.symbol;
-        } 
+        }
+
         else {
 
             vector<int> freeSlots;
-            
+
             for (int i = 0; i < 9; i++) {
 
                 if (selections[i] != player.symbol && selections[i] != enemy.symbol) {
-
                     freeSlots.push_back(i);
                 }
 
             }
 
             if (!freeSlots.empty()) {
-
                 int move = freeSlots[rand() % freeSlots.size()];
-
                 selections[move] = enemy.symbol;
-
-                cout << enemy.name << " \n\nplaced its symbol in slot " << move + 1 << ".\n\n";
+                cout << enemy.name << " placed its symbol in slot " << move + 1 << ".\n\n";
             }
         }
 
         randomOperator();
 
+        int result = 0;
         if (checkWin()) {
-            if (turn == player.symbol) {
-
-                result = 1;
-
-            } 
             
+            if (turn == player.symbol) {
+                result = 1;
+            } 
             else {
-
                 result = -1;
-
             }
         } 
+        
         else if (checkTie()) {
 
-            result = 0;
+            cout << "\nThis round ended in a tie. No damage dealt.\n";
+            resetGame();            
+            turn = player.symbol;   
+            continue;              
         }
 
         if (result != 0) {
@@ -847,75 +849,66 @@ int EntityBattle(Entity &player, Entity &enemy) {
                 damage = player.attack - enemy.defense;
 
                 if (damage < 0) damage = 0;
-
                 enemy.health -= damage;
 
-                cout << "\n\n" << player.name << " wins this round and deals " << damage << " damage to " << enemy.name << ".\n\n";
+                cout << "\n" << player.name << " wins the round and deals " << damage 
+                << " damage to " << enemy.name << ".\n";
             } 
+
             else if (result == -1) {
 
                 int enemyAttack = enemy.attack;
                 int enemyDef = enemy.defense;
 
-                if (enemy.type == "Final Boss" && rand() % 100 < 30) {
+             
+                if (enemy.isFinalBoss && rand() % 100 < 30) {
 
                     if (rand() % 2 == 0) {
 
                         enemyAttack += 15;
-
-                        cout << "\n\n" << enemy.name << " uses Rage and increases attack!\n\n";
-
+                        cout << "\n" << enemy.name << " uses Rage and increases attack!\n";
                     } 
+
                     else {
 
                         enemyDef += 15;
-                        cout << "\n\n" << enemy.name << " uses Shield and increases defense!\n\n";
-
+                        cout << "\n" << enemy.name << " uses Shield and increases defense!\n";
                     }
                 }
 
                 damage = enemyAttack - player.defense;
-
                 if (damage < 0) damage = 0;
-
                 player.health -= damage;
-
-                cout << "\n\n" << enemy.name << " wins this round and deals " << damage << " damage to " << player.name << ".\n\n";
+                cout << "\n" << enemy.name << " wins the round and deals " << damage 
+                << " damage to " << player.name << ".\n";
             } 
+
             else {
-                cout << "\n\nThis round ended in a tie. No damage dealt.\n\n";
+
+                cout << "\nThis round ended in a tie. No damage dealt.\n";
             }
 
-            if (player.health <= 0 || enemy.health <= 0) break;
-
-            resetGame();
-
-            result = 0;
-
-            turn = player.symbol;
-
-            continue;
-        }
-
-        if (turn == player.symbol) {
-
-            turn = enemy.symbol;
+            if (player.health > 0 && enemy.health > 0) {
+                resetGame();
+                turn = player.symbol;
+            }
         } 
         else {
 
-            turn = player.symbol;
+            turn = (turn == player.symbol) ? enemy.symbol : player.symbol;
         }
     }
 
     if (player.health > 0) {
 
-        return 1;  
-    } 
-    
+        return 1;
+    }  
     else {
-        return -1; 
+
+        return -1;
     }
 }
+
 
 
 
@@ -973,7 +966,7 @@ void campaignMode() {
 
     if(continueStatus != 'y' && continueStatus != 'Y') {
 
-        cout << "Exiting Campaign Mode. Returning to main menu.\n";
+        cout << "\n\nExiting Campaign Mode. Returning to main menu.\n\n";
 
         return;
 
@@ -1058,7 +1051,7 @@ void campaignMode() {
 
     if(continueStatus != 'y' && continueStatus != 'Y') {
 
-        cout << "Exiting Campaign Mode. Returning to main menu.\n";
+        cout << "Exiting Campaign Mode. Returning to main menu.\n\n";
 
         return;
 
@@ -1133,7 +1126,7 @@ void campaignMode() {
 
     if(battleResult == -1) {
 
-        cout << "\n\nYou have been defeated by the Necromancer. Game Over.\n";
+        cout << "\n\nYou have been defeated by the Necromancer. Game Over.\n\n";
 
         return;
 
@@ -1151,7 +1144,7 @@ void campaignMode() {
 
     if(continueStatus != 'y' && continueStatus != 'Y') {
 
-        cout << "Exiting Campaign Mode. Returning to main menu.\n";
+        cout << "Exiting Campaign Mode. Returning to main menu.\n\n";
 
         return;
 
@@ -1168,7 +1161,7 @@ void campaignMode() {
 
     if(battleResult == -1) {
 
-        cout << "\n\nYou have been defeated by the Dragon. Game Over.\n";
+        cout << "\n\nYou have been defeated by the Dragon. Game Over.\n\n";
 
         return;
 
