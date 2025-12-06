@@ -25,6 +25,11 @@ struct Character {
     int defense;
 };
 
+Character player;
+
+Character enemy;
+
+
 vector<Character> inGameOpponents = {
 
     {"Hound", 'G', "Paladin", 120, 40, 50},
@@ -36,9 +41,6 @@ vector<Character> inGameOpponents = {
     {"Dark Mage", 'D', "Alchemist", 80, 80, 20}
 };
 
-Character player;
-
-Character enemy;
 
 
 void randomEarthquake(){
@@ -139,6 +141,40 @@ void randomOperator() {
 
 }
 
+
+
+bool checkWin(char currentTurn) {
+
+    for(int i = 0; i < 8; i++){
+
+        if(selections[WINNING_COMBOS[i][0]] == currentTurn && selections[WINNING_COMBOS[i][1]]==currentTurn && selections[WINNING_COMBOS[i][2]] == currentTurn){
+
+            return true;
+        } 
+    }
+    return false;
+}
+
+bool checkTie() {
+
+    for(int i=0; i < TOTAL_SLOTS; i++){
+
+        if(selections[i]>='1' && selections[i]<='9') {
+            return false;
+        }
+    }
+    return true;
+}
+
+void resetBoard() {
+
+    for(int i = 0; i < TOTAL_SLOTS; i++) selections[i]='1'+i;
+
+    turn='X';
+    
+    gameEnd=false;
+}
+
 int playerMove() {
 
     char turn;
@@ -187,34 +223,34 @@ int enemyMove() {
 }
 
 
-bool checkWin() {
+void fight(Character &player, Character &enemy) {
+
+   cout<< "The fight against the " << enemy.name << " has begun!\n";
+
+   while(player.health > 0 && enemy.health > 0) {
+
+       resetGame();
+
+       while(true) {
+
+        displayBoard();
+
+        cout << "Your Health: " << player.health << " | " << enemy.name << "'s Health: " << enemy.health << "\n";
+
+        int move = playerMove();
+
+        selections[move] = player.symbol;
+
+        randomOperator();
+
+        if(checkWin(player.symbol)) {
+
+           
 
 
-    for (int i = 0; i < 8; i++) {
-
-        if (selections[WINNING_COMBOS[i][0]] == turn && selections[WINNING_COMBOS[i][1]] == turn && selections[WINNING_COMBOS[i][2]] == turn) {
-            return true;
         }
-    }
-    return false;
-}
-
-bool checkTie() {
-
-    for (int i = 0; i < TOTAL_SLOTS; i++) {
-
-        if (selections[i] != 'X' && selections[i] != 'O') return false;
-    }
-    return true;
-
-}
-
-void resetGame() {
-
-    for (int i = 0; i < TOTAL_SLOTS; i++) selections[i] = '1' + i;
-    turn = 'X';
-    gameEnd = false;
-
+       }
+   }
 }
 
 
