@@ -1,47 +1,20 @@
 #include <iostream>
 #include <cassert>
-#include <vector>
-
 using namespace std;
 
 const int TOTAL_SLOTS = 9;
+
+bool moveValid = false;
 
 char selections[TOTAL_SLOTS] = {'1','2','3','4','5','6','7','8','9'};
 
 const int WINNING_COMBOS[8][3] = {{0,1,2}, {3,4,5}, {6,7,8},{0,3,6}, {1,4,7}, {2,5,8},{0,4,8}, {2,4,6}};
 
-struct Character {
+char turn = 'X';
 
-    string name;
+bool gameEnd = false;
 
-    char symbol;
-
-    string archetype;
-
-    int health;
-
-    int attack;
-
-    int defense;
-};
-
-Character player;
-
-Character enemy;
-
-
-vector<Character> inGameOpponents = {
-
-    {"Hound", 'G', "Paladin", 120, 40, 50},
-
-    {"Dragon", 'O', "Alchemist", 100, 60, 30},
-
-    {"Giant", 'T', "Paladin", 150, 30, 70},
-
-    {"Dark Mage", 'D', "Alchemist", 80, 80, 20}
-};
-
-
+char choice;
 
 void randomEarthquake(){
 
@@ -140,114 +113,34 @@ void randomOperator() {
 
 
 }
+bool checkWin() {
 
 
+    for (int i = 0; i < 8; i++) {
 
-bool checkWin(char currentTurn) {
-
-    for(int i = 0; i < 8; i++){
-
-        if(selections[WINNING_COMBOS[i][0]] == currentTurn && selections[WINNING_COMBOS[i][1]]==currentTurn && selections[WINNING_COMBOS[i][2]] == currentTurn){
-
+        if (selections[WINNING_COMBOS[i][0]] == turn && selections[WINNING_COMBOS[i][1]] == turn && selections[WINNING_COMBOS[i][2]] == turn) {
             return true;
-        } 
+        }
     }
     return false;
 }
 
 bool checkTie() {
 
-    for(int i=0; i < TOTAL_SLOTS; i++){
+    for (int i = 0; i < TOTAL_SLOTS; i++) {
 
-        if(selections[i]>='1' && selections[i]<='9') {
-            return false;
-        }
+        if (selections[i] != 'X' && selections[i] != 'O') return false;
     }
     return true;
+
 }
 
-void resetBoard() {
+void resetGame() {
 
-    for(int i = 0; i < TOTAL_SLOTS; i++) selections[i]='1'+i;
+    for (int i = 0; i < TOTAL_SLOTS; i++) selections[i] = '1' + i;
+    turn = 'X';
+    gameEnd = false;
 
-    turn='X';
-
-    gameEnd=false;
-}
-
-int playerMove() {
-
-    int choice;
-
-    while(true){
-
-        cout << "Enter your move (1-9): ";
-
-        cin >> choice;
-
-        if(cin.fail() || choice<1 || choice>9){
-
-            cin.clear();
-            cin.ignore(50000,'\n');
-            cout << "Invalid input!\n";
-            continue;
-        }
-
-        if(selections[choice-1] == player.symbol || selections[choice-1] == enemy.symbol){
-
-            cout << "Slot already occupied!\n";
-            continue;
-        }
-
-        return choice-1;
-    }
-}
-
-int enemyMove() {
-
-    vector<int> available;
-
-    for(int i = 0; i < TOTAL_SLOTS; i++){
-
-        if(selections[i]!=player.symbol && selections[i]!=enemy.symbol) {
-
-            available.push_back(i);
-        }
-
-    }
-    
-    return available[rand()%available.size()];
-}
-
-
-void fight(Character &player, Character &enemy) {
-
-   cout<< "The fight against the " << enemy.name << " has begun!\n";
-
-   while(player.health > 0 && enemy.health > 0) {
-
-       resetGame();
-
-       while(true) {
-
-        displayBoard();
-
-        cout << "Your Health: " << player.health << " | " << enemy.name << "'s Health: " << enemy.health << "\n";
-
-        int move = playerMove();
-
-        selections[move] = player.symbol;
-
-        randomOperator();
-
-        if(checkWin(player.symbol)) {
-
-           
-
-
-        }
-       }
-   }
 }
 
 
@@ -272,16 +165,17 @@ bool characterChecker(char a) {
 
 void displayBoard() {
 
-    for(int i = 0; i < TOTAL_SLOTS; i++){
+    for (int i = 0; i < 9; i++) {
 
         cout << selections[i];
 
-        if(i % 3 != 2) cout << " | ";
+        if (i % 3 != 2) cout << " | ";
 
-        else if(i != 8) cout << "\n---------\n";
+        else if (i != 8) cout << "\n---------\n";
 
-        else cout << "\n";
+        else cout << "\n\n";
     }
+
 }
 
 void normalGame() {
@@ -924,55 +818,70 @@ void testCases() {
 
 }
 
-void StatsSetup(Character &player) {
+int main() {
 
-    if (player.archetype == "Paladin" || player.archetype == "paladin") {
+    testCases();
 
-        player.health = 150;
-        player.attack = 50;
-        player.defense = 70;
+    char gameMode;
 
-    } 
-    else if (player.archetype == "Alchemist" || player.archetype == "alchemist") {
+    char choice = 'y';
 
-        player.health = 100;
-        player.attack = 80;
-        player.defense = 40;
+    while (choice != 'n' && choice != 'N') {
+
+    cout << "-----TIC TAC TOE-----\n";
+
+    cout << "Select Game Mode:\n";
+
+    cout << "1. Normal Game\n";
+
+    cout << "2. Battle Mode\n";
+
+    cin >> gameMode;
+    
+
+
+
+    if (gameMode == '1') {
+
+        normalGame();
 
     }
 
-}
+    else if (gameMode == '2') {
 
-vector<string> campaignStory = {
+        battleMode();
 
-    "you wake up in a dark forest with no memory of how you got there.",
-    "As you explore the forest, you encounter a wild hound blocking your path.",
-    "After defeating the hound, you find a mysterious potion that boosts your abilities.",
-    "Continuing your journey, you come across a fierce dragon guarding a treasure.",
-    "With the dragon defeated, you discover an ancient relic that enhances your powers.",
-    "Deeper into the forest, you face a towering giant threatening a village.",
-    "After overcoming the giant, you find a hidden sanctuary to rest and recover.",
-    "Finally, you confront the Dark Mage (Final Boss) who has been causing chaos in the forest.",
-    "With the Dark Mage defeated, peace is restored to the forest, and you find a way back home."
-};
+    }
 
-int main() {
+    else {
 
+        cout << "Invalid game mode selected!\n";
 
-    cout << "Enter your name: \n";
+    }
 
-    cin >> player.name;
+    cout << "Do you want to go back to the main menu? (y/n): \n";
 
-    cout << "Choose your character symbol: \n";
+    cin >> choice;
 
-    cin >> player.symbol;
-    
-    cout << "Choose your archetype (Paladin/Alchemist): \n";
+    while(cin.fail() || (choice != 'y' && choice != 'Y' && choice != 'n' && choice != 'N')){
 
-    cin >> player.archetype;
+        cin.clear();            
 
+        cin.ignore(500, '\n');     
 
+        cout << "Invalid input. Please enter y or n:\n ";
 
-    
+        cin >> choice;   
+
+    }
+
+    cin.ignore(500, '\n');
+
+    }
+
+    cout << "Thank you for playing Tic Tac Toe!\n";
+
+    cin.ignore(500, '\n');
+
     return 0;
 }
