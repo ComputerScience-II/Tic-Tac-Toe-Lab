@@ -157,6 +157,7 @@ bool checkWin() {
     for (int i = 0; i < 8; i++) {
 
         if (selections[WINNING_COMBOS[i][0]] == turn && selections[WINNING_COMBOS[i][1]] == turn && selections[WINNING_COMBOS[i][2]] == turn) {
+
             return true;
         }
     }
@@ -774,7 +775,7 @@ int EntityBattle(Entity &player, Entity &enemy) {
 
             if (checkTie()) {
 
-                cout << "\nThis round ended in a tie. No damage dealt.\n";
+                cout << "\nThis round ended in a tie. No damage dealt to anyone.\n";
                 resetGame();
                 turn = player.symbol;
                 continue;
@@ -785,33 +786,25 @@ int EntityBattle(Entity &player, Entity &enemy) {
             cin >> choice;
 
             if (cin.fail() || choice < '1' || choice > '9') {
-
                 cin.clear(); cin.ignore(50000, '\n');
                 cout << "\n\nInvalid input! Try again.\n\n";
                 continue;
             }
 
             int idx = choice - '0' - 1;
-
             if (selections[idx] == player.symbol || selections[idx] == enemy.symbol) {
-
                 cout << "\n\nSlot full! Choose another.\n\n";
                 continue;
             }
 
             selections[idx] = player.symbol;
         }
-
         else {
-
             vector<int> freeSlots;
-
             for (int i = 0; i < 9; i++) {
-
                 if (selections[i] != player.symbol && selections[i] != enemy.symbol) {
                     freeSlots.push_back(i);
                 }
-
             }
 
             if (!freeSlots.empty()) {
@@ -824,21 +817,13 @@ int EntityBattle(Entity &player, Entity &enemy) {
         int result = 0;
 
         if (checkWin()) {
-
-            if (turn == player.symbol) {
-                result = 1;
-            } 
-            else {
-                result = -1;
-            }
+            result = (turn == player.symbol) ? 1 : -1;
         } 
-        
         else if (checkTie()) {
-
             cout << "\n\nThis round ended in a tie. No damage dealt.\n\n";
-            resetGame();            
-            turn = player.symbol;   
-            continue;              
+            resetGame();
+            turn = player.symbol;
+            continue;
         }
 
         if (result != 0) {
@@ -848,45 +833,79 @@ int EntityBattle(Entity &player, Entity &enemy) {
             if (result == 1) {
 
                 damage = player.attack - enemy.defense;
-
                 if (damage < 0) damage = 0;
                 enemy.health -= damage;
-
-                cout << "\n\n" << player.name << " wins the round and deals " << damage 
-                << " damage to " << enemy.name << ".\n\n";
+                cout << "\n\n" << player.name << " wins the round and deals " << damage << " damage to " << enemy.name << ".\n\n";
             } 
-
             else if (result == -1) {
-
                 int enemyAttack = enemy.attack;
                 int enemyDef = enemy.defense;
 
-             
-                if (enemy.isFinalBoss && rand() % 100 < 30) {
+                // Unique abilities
+                if (enemy.name == "Goblin") {
+                    if (rand() % 100 < 20) {
 
-                    if (rand() % 2 == 0) {
+                        cout << "\n\nGoblin uses dodge! You take no damage this round.\n\n";
+                        enemyAttack = 0;
 
-                        enemyAttack += 15;
-                        cout << "\n\n" << enemy.name << " uses Rage and increases attack!\n\n";
+                    }
+                } 
+                else if (enemy.name == "Orc") {
+
+                    if (rand() % 100 < 25) {
+
+                        enemyAttack *= 2;
+
+                        cout << "\n\nOrc goes berserk and his attack is doubled!\n\n";
+
+                    }
+                } 
+                else if (enemy.name == "Giant") 
+                {
+                    if (rand() % 100 < 15) {
+
+                        enemyAttack += 20;
+
+                        cout << "\n\nGiant crushes you and his attack increases by 20\n\n";
+                    }
+                } 
+                else if (enemy.name == "Necromancer") {
+
+                    if (rand() % 100 < 30) {
+
+                        enemy.health += 15;
+                        cout << "\n\nNecromancer heals 15 HP!\n\n";
+
+                    }
+                } 
+                else if (enemy.name == "Dragon") {
+
+                    int ability = rand() % 3;
+
+                    if (ability == 0) {
+
+                        enemyAttack += 25;
+                        cout << "\n\nDragon uses fire breath and his overall damage has increases\n\n";
+
                     } 
+                    else if (ability == 1) {
 
-                    else {
-
-                        enemyDef += 15;
-                        cout << "\n\n" << enemy.name << " uses Shield and increases defense!\n\n";
+                        enemyDef += 20;
+                        cout << "\n\nDragon uses scale armor and his defense increases by 20\n\n";
+                    } 
+                    else if (ability == 2) {
+                        cout << "\n\nDragon flaps its wings and you lose your turn\n\n";
+                        turn = enemy.symbol;
                     }
                 }
 
                 damage = enemyAttack - player.defense;
                 if (damage < 0) damage = 0;
                 player.health -= damage;
-                cout << "\n\n" << enemy.name << " wins the round and deals " << damage 
-                << " damage to " << player.name << ".\n\n";
-            } 
 
-            else {
+                if (enemy.name != "Dragon" || (enemy.name == "Dragon" && damage > 0))
 
-                cout << "\n\nThis round ended in a tie. No damage dealt.\n\n";
+                    cout << "\n\n" << enemy.name << " wins the round and deals " << damage << " damage to " << player.name << ".\n\n";
             }
 
             if (player.health > 0 && enemy.health > 0) {
@@ -896,19 +915,25 @@ int EntityBattle(Entity &player, Entity &enemy) {
         } 
         else {
 
-            turn = (turn == player.symbol) ? enemy.symbol : player.symbol;
+            if (turn == player.symbol) {
+
+                turn = enemy.symbol;
+            }
+            else {
+                turn = player.symbol;
+            }
         }
     }
 
     if (player.health > 0) {
-
         return 1;
-    }  
-    else {
-
+    }
+    else{
         return -1;
+
     }
 }
+
 
 
 void shopMenu(Entity &player) {
@@ -919,7 +944,7 @@ void shopMenu(Entity &player) {
     while(shopping) {
 
         cout << "\nWelcome to the dungeon shop! Each item costs 10 coins.\n";
-        
+
         cout << "\n\nCurrent Wallet: " << wallet;
 
         cout << "1. Attack Potion (+10 Attack)\n";
