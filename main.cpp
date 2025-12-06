@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cassert>
+#include <vector>
 using namespace std;
 
 const int TOTAL_SLOTS = 9;
@@ -15,6 +16,30 @@ char turn = 'X';
 bool gameEnd = false;
 
 char choice;
+
+struct Entity {
+
+    string name; 
+
+    string type; 
+
+    char symbol;
+
+    int health;
+
+    int attack;
+
+    int defense;
+};
+
+vector<Entity> enemies {
+
+    {"Goblin", "Monster", 'G', 50, 15, 5},
+
+    {"Orc", "Monster", 'O', 80, 20, 10},
+
+    {"Dragon", "Boss", 'D', 200, 40, 20}
+};
 
 void randomEarthquake(){
 
@@ -669,7 +694,77 @@ void battleMode() {
 
 }
 
+void StatsSetter(Entity &entity, string archetype) {
 
+    if(archetype == "Paladin" || archetype == "paladin") {
+
+        entity.health = 150;
+
+        entity.attack = 30;
+
+        entity.defense = 20;
+
+    }
+
+    else if(archetype == "Alchemist" || archetype == "alchemist") {
+
+        entity.health = 100;
+
+        entity.attack = 40;
+
+        entity.defense = 10;
+
+    }
+
+}
+
+
+void campaignMode() {
+
+
+    Entity player;
+
+    cout << "----WELCOME TO CAMPAIGN MODE----\n\n\n";
+
+    cout << "Enter your character's name: \n";
+
+    cin >> player.name;
+
+    cout << "Choose your archetype (Paladin/Alchemist): \n";
+
+    cin >> player.type;
+
+    while(player.type != "Paladin" && player.type != "paladin" && player.type != "Alchemist" && player.type != "alchemist") {
+
+        cout << "Invalid archetype! Please choose either Paladin or Alchemist: \n";
+
+        cin >> player.type;
+
+    }
+
+    cout << "Choose your character symbol: \n";
+
+    cin >> player.symbol;
+
+    while (!characterChecker(player.symbol)) {
+
+        cout << "Invalid character! Please choose a valid character symbol:\n ";
+
+        cin >> player.symbol;
+
+    }
+
+    StatsSetter(player, player.type);
+
+    cout << "Your character " << player.name << " has been created with the following stats:\n";
+
+    cout << "Health: " << player.health << "\n";
+    cout << "Attack: " << player.attack << "\n";
+    cout << "Defense: " << player.defense << "\n";
+
+    
+
+}
 
 void testCases() {
 
@@ -836,6 +931,8 @@ int main() {
 
     cout << "2. Battle Mode\n";
 
+    cout << "3. Campaign Mode\n";
+
     cin >> gameMode;
     
 
@@ -850,6 +947,12 @@ int main() {
     else if (gameMode == '2') {
 
         battleMode();
+
+    }
+
+    else if (gameMode == '3') {
+
+        campaignMode();
 
     }
 
