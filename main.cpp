@@ -324,8 +324,6 @@ void normalGame() {
 
 }
 
-
-
 bool isAdjacent(int slot1, int slot2) {
 
     if (slot1 < 0 || slot1 > 8 || slot2 < 0 || slot2 > 8) {
@@ -777,112 +775,145 @@ int EntityBattle(Entity &player, Entity &enemy) {
 
             cin >> choice;
 
-            int idx = choice - '0' - 1;
+            if (cin.fail() || choice < '1' || choice > '9') {
 
-            if (selections[idx] == player.symbol || selections[idx] == enemy.symbol) {
+                cin.clear(); cin.ignore(50000, '\n');
 
-                cout << "Slot full!\n";
+                cout << "Invalid input! Try again.\n";
 
                 continue;
             }
 
-            selections[idx] = turn;
+            int idx = choice - '0' - 1;
+
+            if (selections[idx] == player.symbol || selections[idx] == enemy.symbol) {
+
+                cout << "\n\nSlot full! Choose another.\n\n";
+
+                continue;
+            }
+
+            selections[idx] = player.symbol;
         } 
         else {
 
             vector<int> freeSlots;
+            
+            for (int i = 0; i < 9; i++) {
 
-            for (int i = 0; i < 9; i++)
-
-                if (selections[i] != player.symbol && selections[i] != enemy.symbol) {  
+                if (selections[i] != player.symbol && selections[i] != enemy.symbol) {
 
                     freeSlots.push_back(i);
-
                 }
+
+            }
 
             if (!freeSlots.empty()) {
 
                 int move = freeSlots[rand() % freeSlots.size()];
 
-                selections[move] = turn;
+                selections[move] = enemy.symbol;
 
-                cout << "\n\n" << enemy.name << " placed its symbol in slot " << move + 1 << ".\n\n";
+                cout << enemy.name << " \n\nplaced its symbol in slot " << move + 1 << ".\n\n";
             }
         }
 
-        if (checkWin()) {
+        randomOperator();
 
+        if (checkWin()) {
             if (turn == player.symbol) {
-                
+
                 result = 1;
+
             } 
+            
             else {
 
                 result = -1;
-            }
 
-        } else if (checkTie()) {
+            }
+        } 
+        else if (checkTie()) {
 
             result = 0;
         }
 
-        turn = (turn == player.symbol) ? enemy.symbol : player.symbol;
+        if (result != 0) {
 
-        if (result != 0) break;
-    }
+            int damage = 0;
 
-    int damage = 0;
+            if (result == 1) {
 
-    if (result == 1) {
+                damage = player.attack - enemy.defense;
 
-        damage = player.attack - enemy.defense;
+                if (damage < 0) damage = 0;
 
-        if (damage < 0) damage = 0;
+                enemy.health -= damage;
 
-        enemy.health -= damage;
+                cout << "\n\n" << player.name << " wins this round and deals " << damage << " damage to " << enemy.name << ".\n\n";
+            } 
+            else if (result == -1) {
 
-        cout << player.name << " wins and deals " << damage << " damage to " << enemy.name << ".\n";
+                int enemyAttack = enemy.attack;
+                int enemyDef = enemy.defense;
 
-    } 
-    else if (result == -1) {
+                if (enemy.type == "Final Boss" && rand() % 100 < 30) {
 
-        int enemyAttack = enemy.attack;
-        int enemyDef = enemy.defense;
+                    if (rand() % 2 == 0) {
 
-        if (enemy.type == "Final Boss" && rand() % 100 < 30) {
+                        enemyAttack += 15;
 
-            if (rand() % 2) {
+                        cout << "\n\n" << enemy.name << " uses Rage and increases attack!\n\n";
 
-                enemyAttack += 15;
-                cout << enemy.name << " uses Rage and increases attack!\n";
+                    } 
+                    else {
 
+                        enemyDef += 15;
+                        cout << "\n\n" << enemy.name << " uses Shield and increases defense!\n\n";
+
+                    }
+                }
+
+                damage = enemyAttack - player.defense;
+
+                if (damage < 0) damage = 0;
+
+                player.health -= damage;
+
+                cout << "\n\n" << enemy.name << " wins this round and deals " << damage << " damage to " << player.name << ".\n\n";
             } 
             else {
-
-                enemyDef += 15;
-                cout << enemy.name << " uses Shield and increases defense!\n";
-
+                cout << "\n\nThis round ended in a tie. No damage dealt.\n\n";
             }
+
+            if (player.health <= 0 || enemy.health <= 0) break;
+
+            resetGame();
+
+            result = 0;
+
+            turn = player.symbol;
+
+            continue;
         }
 
-        damage = enemyAttack - player.defense;
+        if (turn == player.symbol) {
 
-        if (damage < 0) damage = 0;
+            turn = enemy.symbol;
+        } 
+        else {
 
-        player.health -= damage;
-
-        cout << "\n\n" << player.name << " loses and takes " << damage << " damage from " << enemy.name << ".\n\n";
-    } 
-    
-    else {
-        cout << "\n\nThis battle ended in a tie. No damage dealt.\n\n";
+            turn = player.symbol;
+        }
     }
 
     if (player.health > 0) {
-        return 1;
+
+        return 1;  
     } 
+    
     else {
-        return -1;
+        return -1; 
     }
 }
 
