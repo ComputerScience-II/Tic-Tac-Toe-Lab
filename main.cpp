@@ -894,31 +894,33 @@ void campaignMode() {
 
     Entity player;
 
+    char continueStatus = 'y';
+
     cout << "----WELCOME TO CAMPAIGN MODE----\n\n\n";
 
-    cout << "Enter your character's name: \n";
+    cout << "Enter your character's name:\n\n";
 
     cin >> player.name;
 
-    cout << "Choose your archetype (Paladin/Alchemist): \n";
+    cout << "Choose your archetype (Paladin/Alchemist): \n\n";
 
     cin >> player.type;
 
     while(player.type != "Paladin" && player.type != "paladin" && player.type != "Alchemist" && player.type != "alchemist") {
 
-        cout << "Invalid archetype! Please choose either Paladin or Alchemist: \n";
+        cout << "Invalid archetype! Please choose either Paladin or Alchemist: \n\n";
 
         cin >> player.type;
 
     }
 
-    cout << "Choose your character symbol: \n";
+    cout << "Choose your character symbol: \n\n";
 
     cin >> player.symbol;
 
     while (!characterChecker(player.symbol)) {
 
-        cout << "Invalid character! Please choose a valid character symbol:\n ";
+        cout << "Invalid character! Please choose a valid character symbol:\n\n";
 
         cin >> player.symbol;
 
@@ -932,6 +934,19 @@ void campaignMode() {
     cout << "Health: " << player.health << "\n";
     cout << "Attack: " << player.attack << "\n";
     cout << "Defense: " << player.defense << "\n";
+
+    cout << "\n\nWould you like to begin your campaign? (y/n): \n\n";
+
+    cout << "-------------------------------\n\n";
+    cin >> continueStatus;
+
+    if(continueStatus != 'y' && continueStatus != 'Y') {
+
+        cout << "Exiting Campaign Mode. Returning to main menu.\n";
+
+        return;
+
+    }
 
     cout << "\n\nLet the Campaign begin!\n\n";
 
@@ -955,13 +970,31 @@ void campaignMode() {
 
     }
 
+    cout << "-------------------------------\n\n";
+
     cout << "\n\nYou have defeated the Goblin! You may proceed deeper into the dungeon.\n";
+
+    cout << "\n\nwould you like to continue? (y/n): \n\n";
+
+    cout << "-------------------------------\n\n";
+
+    cin >> continueStatus;
+
+    if(continueStatus != 'y' && continueStatus != 'Y') {
+
+        cout << "Exiting Campaign Mode. Returning to main menu.\n";
+
+        return;
+
+    }
 
     cout << "\n\n-------------------------------\n\n";
 
     cout << "\n\nAs you venture further into the dungeon you find a potion which increases your attack by 10 points.\n";
 
     player.attack += 10;
+
+    cout << "-------------------------------\n\n";
 
     cout << "\nYour attack is now " << player.attack << ".\n";
 
@@ -983,7 +1016,22 @@ void campaignMode() {
 
     }
 
+    cout << "\n\n-------------------------------\n\n";
+
     cout << "\n\nYou have defeated the Orc! You may proceed deeper into the dungeon.\n";
+
+    cout << "\n\nwould you like to continue? (y/n): \n\n";
+
+    cout << "\n\n-------------------------------\n\n";
+    cin >> continueStatus;
+
+    if(continueStatus != 'y' && continueStatus != 'Y') {
+
+        cout << "Exiting Campaign Mode. Returning to main menu.\n";
+
+        return;
+
+    }
 
     cout << "\n\n-------------------------------\n\n";
 
@@ -991,7 +1039,10 @@ void campaignMode() {
 
     player.defense += 10;
 
+    cout << "-------------------------------\n\n";
+
     cout << "\nYour defense is now " << player.defense << ".\n";
+
     cout << "\n\n-------------------------------\n\n";
 
     cout << "\n\nYou make your way out of the dungeon and through the forest in between the vast mountains.\n";
@@ -1011,15 +1062,32 @@ void campaignMode() {
         return;
 
     }
+    cout << "\n\n-------------------------------\n\n";
 
     cout << "\n\nYou bravely defeat the Giant and continue your journey up the mountain.\n";
 
+    cout << "\n\nwould you like to continue? (y/n): \n\n";
+
+    cout << "\n\n-------------------------------\n\n";
+    
+    cin >> continueStatus;
+
+    if(continueStatus != 'y' && continueStatus != 'Y') {
+
+        cout << "Exiting Campaign Mode. Returning to main menu.\n";
+
+        return;
+
+    }
+
     cout << "\n\n-------------------------------\n\n";
 
-    cout << "\n\nAs your make your way to the peak the weather ambushes you and you are forced to take shelter in a cave.\n";
+    cout << "\n\nAs your make your way to the peak the weather ambushes you and you are forced to take shelter in a cave.\n\n";
     cout << "\nInside the cave you find a sword, respectively named Exaclibur which increases your attack by 20 points.\n";
 
     player.attack += 20;
+
+    cout << "-------------------------------\n\n";
 
     cout << "\nYour attack is now " << player.attack << ".\n";
 
@@ -1040,7 +1108,23 @@ void campaignMode() {
 
     }
 
+    cout << "-------------------------------\n\n";
+
     cout << "\n\nYou have defeated the Necromancer! You may now enter the Boss Room.\n";
+
+    cout << "\n\nwould you like to continue? (y/n): \n\n";
+
+    cout << "\n\n-------------------------------\n\n";
+
+    cin >> continueStatus;
+
+    if(continueStatus != 'y' && continueStatus != 'Y') {
+
+        cout << "Exiting Campaign Mode. Returning to main menu.\n";
+
+        return;
+
+    }
 
     cout << "\n\n-------------------------------\n\n";
 
@@ -1058,8 +1142,12 @@ void campaignMode() {
         return;
 
     }
-    
+
+    cout << "-------------------------------\n\n";
+
     cout << "\n\nCongratulations! You have defeated the Dragon and completed the Campaign Mode!\n";
+
+    cout << "-------------------------------\n\n";
 
 }
 
