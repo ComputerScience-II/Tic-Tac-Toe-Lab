@@ -945,7 +945,7 @@ void shopMenu(Entity &player) {
 
         cout << "\nWelcome to the dungeon shop! Each item costs 10 coins.\n";
 
-        cout << "\n\nCurrent Wallet: " << wallet;
+        cout << "\n\nCurrent Wallet:\n\n " << wallet;
 
         cout << "1. Attack Potion (+10 Attack)\n";
         cout << "2. Health Potion (+20 Health)\n";
@@ -993,24 +993,24 @@ void shopMenu(Entity &player) {
 void campaignMode() {
 
     Entity player;
+
     char continueStatus = 'y';
     char shopChoice = 'y';
 
-    cout << "----WELCOME TO CAMPAIGN MODE----\n\n\n";
+    cout << "----welcome to campaign mode----\n\n\n";
 
     cout << "Enter your character's name:\n\n";
 
     cin >> player.name;
 
-    cout << "Choose your archetype (Paladin/Alchemist): \n\n";
+    cout << "Choose your archetype (paladin/alchemist): \n\n";
 
     cin >> player.type;
 
     while(player.type != "Paladin" && player.type != "paladin" && player.type != "Alchemist" && player.type != "alchemist") {
 
-        cout << "Invalid archetype! Please choose either Paladin or Alchemist: \n\n";
+        cout << "Invalid archetype. Please choose either paladin or alchemist: \n\n";
         cin >> player.type;
-
     }
 
     cout << "Choose your character symbol: \n\n";
@@ -1019,9 +1019,8 @@ void campaignMode() {
 
     while (!characterChecker(player.symbol)) {
 
-        cout << "Invalid character! Please choose a valid character symbol:\n\n";
+        cout << "Invalid character. Please choose a valid character symbol:\n\n";
         cin >> player.symbol;
-
     }
 
     StatsSetter(player, player.type);
@@ -1035,57 +1034,60 @@ void campaignMode() {
 
     cout << "\n\nWould you like to begin your campaign? (y/n): \n\n";
 
-    cout << "-------------------------------\n\n";
     cin >> continueStatus;
 
     if(continueStatus != 'y' && continueStatus != 'Y') {
 
-        cout << "\n\nExiting Campaign Mode. Returning to main menu.\n\n";
+        cout << "\n\nExiting campaign mode. Returning to main menu.\n\n";
         return;
     }
 
-    cout << "\n\nLet the Campaign begin!\n\n";
-
+    cout << "\n\nLet the campaign begin\n\n";
     cout << "-------------------------------\n\n";
 
     cout << "You enter the dark dungeon, ready to face whatever challenges lie ahead.\n";
-    cout << "\n\nYour first opponent approaches...a Goblin\n\n";
+    cout << "\n\nYour first opponent approaches, a goblin\n\n";
 
     Entity enemy1 = enemies[0];
     StatsSetter(enemy1, enemy1.type);
     int battleResult = EntityBattle(player, enemy1);
 
     if(battleResult == -1) {
-        cout << "\n\nYou have been defeated by the Goblin. Game Over.\n";
+
+        cout << "\n\nYou have been defeated by the goblin. Game over.\n";
         return;
     }
 
-    cout << "-------------------------------\n\n";
-
-    cout << "\n\nYou have defeated the Goblin! You may proceed deeper into the dungeon. (Player has been given 10 coins).\n";
+    cout << "\n\nYou have defeated the goblin\n";
     wallet += 10;
+    cout << "You have earned 10 coins. Current wallet: " << wallet << "\n";
 
-    cout << "\n\nWould you like to continue? (y/n): \n\n";
+    cout << "\nAfter the fight, you see two paths ahead:\n";
+    cout << "1. Take the left path (+10 attack)\n";
+    cout << "2. Take the right path (+10 defense)\n";
+    cout << "3. Rest and recover (no stat change)\n";
+    int choice;
+    cin >> choice;
 
-    cout << "-------------------------------\n\n";
-    cin >> continueStatus;
+    if(choice == 1) {
 
-    if(continueStatus != 'y' && continueStatus != 'Y') {
-
-        cout << "Exiting Campaign Mode. Returning to main menu.\n";
-        return;
+        player.attack += 10;
+        cout << "Your attack increased. New attack: " << player.attack << "\n";
     }
 
-    cout << "\n\n-------------------------------\n\n";
+    else if(choice == 2) {
 
-    cout << "\n\nAs you venture further into the dungeon you find a potion which increases your attack by 10 points.\n";
-    player.attack += 10;
+        player.defense += 10;
+        cout << "Your defense increased. New defense: " << player.defense << "\n";
+    }
 
-    cout << "-------------------------------\n\n";
+    else {
 
-    cout << "\nYour attack is now " << player.attack << ".\n";
+        cout << "You rest and prepare for the next challenge.\n";
+    }
 
-    cout << "You notice a shop nearby, would you like to open it? (y/n): ";
+    cout << "\nYou notice a shop nearby. Would you like to open it? (y/n): ";
+
     cin >> shopChoice;
 
     if(shopChoice == 'y' || shopChoice == 'Y') {
@@ -1093,136 +1095,114 @@ void campaignMode() {
         shopMenu(player);
     }
 
-    cout << "\n\n-------------------------------\n\n";
-
-    cout << "\n\nSoon after your drink the potion you walk into a room guarded by an Orc!\n\n";
-
+    cout << "\n\nAs you venture further, an orc blocks your path\n\n";
     Entity enemy2 = enemies[1];
     StatsSetter(enemy2, enemy2.type);
     battleResult = EntityBattle(player, enemy2);
 
     if(battleResult == -1) {
-        cout << "\n\nYou have been defeated by the Orc. Game Over.\n";
+
+        cout << "\n\nYou have been defeated by the orc. Game over.\n";
         return;
     }
 
-    cout << "\n\n-------------------------------\n\n";
+    cout << "\n\nYou defeated the orc. You may proceed deeper into the dungeon\n";
 
-    cout << "\n\nYou have defeated the Orc! You may proceed deeper into the dungeon.\n";
+    cout << "\nBefore continuing, you find a fork in the path:\n";
+    cout << "1. Explore the forest (+10 health)\n";
+    cout << "2. Climb the hill (+10 attack)\n";
+    cout << "3. Take a short rest (no change)\n";
+    cin >> choice;
 
-    cout << "\n\nWould you like to continue? (y/n): \n\n";
+    if(choice == 1) {
 
-    cout << "\n\n-------------------------------\n\n";
-
-    cin >> continueStatus;
-
-    if(continueStatus != 'y' && continueStatus != 'Y') {
-
-        cout << "Exiting Campaign Mode. Returning to main menu.\n\n";
-        return;
+        player.health += 10;
+        cout << "Health increased. New health: " << player.health << "\n";
     }
 
-    cout << "\n\n-------------------------------\n\n";
+    else if(choice == 2) {
 
-    cout << "\n\nDeeper into the dungeon you find a mystical shield which increases your defense by 10 points.\n";
-    player.defense += 10;
+        player.attack += 10;
+        cout << "Attack increased. New attack: " << player.attack << "\n";
+    }
 
-    cout << "-------------------------------\n\n";
+    else {
 
-    cout << "\nYour defense is now " << player.defense << ".\n";
+        cout << "You take a short rest\n";
+    }
 
-    cout << "You notice a shop nearby, would you like to open it? (y/n): ";
-
+    cout << "You see a shop nearby. Would you like to open it? (y/n): ";
     cin >> shopChoice;
 
     if(shopChoice == 'y' || shopChoice == 'Y') {
+
         shopMenu(player);
     }
 
-    cout << "\n\n-------------------------------\n\n";
-
-    cout << "\n\nYou make your way out of the dungeon and through the forest in between the vast mountains.\n";
-    cout << "\n\nAs you reach the foot of the mountain range you are ambushed by a Giant!\n\n";
+    cout << "\n\nA giant appears in your path\n\n";
 
     Entity enemy3 = enemies[2];
+
     StatsSetter(enemy3, enemy3.type);
     battleResult = EntityBattle(player, enemy3);
 
     if(battleResult == -1) {
 
-        cout << "\n\nYou have been defeated by the Giant. Game Over.\n";
+        cout << "\n\nYou have been defeated by the giant. Game over.\n";
         return;
     }
 
-    cout << "\n\n-------------------------------\n\n";
+    cout << "\n\nYou bravely defeat the giant\n";
 
-    cout << "\n\nYou bravely defeat the Giant and continue your journey up the mountain.\n";
+    cout << "\nYou find a cave with two options:\n";
+    cout << "1. Enter the cave (+20 attack)\n";
+    cout << "2. Continue up the mountain (+10 defense)\n";
+    cin >> choice;
 
-    cout << "\n\nWould you like to continue? (y/n): \n\n";
+    if(choice == 1) {
 
-    cout << "\n\n-------------------------------\n\n";
-
-    cin >> continueStatus;
-
-    if(continueStatus != 'y' && continueStatus != 'Y') {
-
-        cout << "Exiting Campaign Mode. Returning to main menu.\n";
-        return;
+        player.attack += 20;
+        cout << "Attack increased. New attack: " << player.attack << "\n";
     }
 
-    cout << "\n\n-------------------------------\n\n";
+    else if(choice == 2) {
 
-    cout << "\n\nAs you make your way to the peak the weather ambushes you and you are forced to take shelter in a cave.\n\n";
-    cout << "\nInside the cave you find a sword, respectively named Exaclibur, which increases your attack by 20 points.\n";
+        player.defense += 10;
+        cout << "Defense increased. New defense: " << player.defense << "\n";
+    }
 
-    player.attack += 20;
-
-    cout << "-------------------------------\n\n";
-    cout << "\nYour attack is now " << player.attack << ".\n";
-
-    cout << "You notice a shop nearby, would you like to open it? (y/n): ";
-
+    cout << "Shop nearby? (y/n): ";
     cin >> shopChoice;
-
     if(shopChoice == 'y' || shopChoice == 'Y') {
 
         shopMenu(player);
     }
 
-    cout << "\n\n-------------------------------\n\n";
-
-    cout << "\n\nYou exit the cave and reach the mountain peak, only to be confronted by the Necromancer guarding the Boss Room!\n\n";  
+    cout << "\n\nThe necromancer guards the boss room\n\n";
 
     Entity enemy4 = enemies[3];
-
     StatsSetter(enemy4, enemy4.type);
-
     battleResult = EntityBattle(player, enemy4);
 
     if(battleResult == -1) {
 
-        cout << "\n\nYou have been defeated by the Necromancer. Game Over.\n\n";
+        cout << "\n\nYou have been defeated by the necromancer. Game over.\n\n";
         return;
     }
 
-    cout << "-------------------------------\n\n";
+    cout << "\n\nYou defeated the necromancer. Enter the boss room?\n";
+    
+    cout << "1. Enter cautiously\n2. Charge in bravely (+10 attack)\n";
 
-    cout << "\n\nYou have defeated the Necromancer! You may now enter the Boss Room.\n";
+    cin >> choice;
 
-    cout << "\n\nWould you like to continue? (y/n): \n\n";
+    if(choice == 2) {
 
-    cout << "\n\n-------------------------------\n\n";
-    cin >> continueStatus;
-
-    if(continueStatus != 'y' && continueStatus != 'Y') {
-
-        cout << "Exiting Campaign Mode. Returning to main menu.\n\n";
-        return;
+        player.attack += 10;
+        cout << "Attack increased. New attack: " << player.attack << "\n";
     }
 
-    cout << "\n\n-------------------------------\n\n";
-
-    cout << "\n\nYou enter the Boss Room and face the final challenge...the Dragon!\n\n";
+    cout << "\n\nYou face the dragon\n\n";
 
     Entity enemy5 = enemies[4];
     StatsSetter(enemy5, enemy5.type);
@@ -1230,16 +1210,14 @@ void campaignMode() {
 
     if(battleResult == -1) {
 
-        cout << "\n\nYou have been defeated by the Dragon. Game Over.\n\n";
+        cout << "\n\nYou have been defeated by the dragon. Game over.\n\n";
         return;
     }
 
-    cout << "-------------------------------\n\n";
-
-    cout << "\n\nCongratulations! You have defeated the Dragon and completed the Campaign Mode!\n";
-
-    cout << "-------------------------------\n\n";
+    cout << "\n\nCongratulations. You have defeated the dragon and completed the campaign mode\n";
 }
+
+
 
 
 void testCases() {
